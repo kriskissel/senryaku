@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main Menu View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainMenuViewController" customModule="Korners" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -15,11 +17,93 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.25" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BackgroundImage" translatesAutoresizingMaskIntoConstraints="NO" id="6OG-gP-b4z">
+                                <rect key="frame" x="20" y="135" width="560" height="401"/>
+                                <animations/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u8I-4O-mRk">
+                                <rect key="frame" x="20" y="544" width="560" height="58"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="300" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" image="TitleText" translatesAutoresizingMaskIntoConstraints="NO" id="HA6-rT-jiz">
+                                <rect key="frame" x="20" y="20" width="560" height="107"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="HA6-rT-jiz" secondAttribute="height" multiplier="560:107" id="AHS-F1-9le"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WEE-fE-m1f">
+                                <rect key="frame" x="234" y="544" width="132" height="48"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Play Now"/>
+                                <connections>
+                                    <action selector="playNow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LnI-Vn-iKX"/>
+                                </connections>
+                            </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Dad-tY-VX1">
+                                <rect key="frame" x="211.5" y="286" width="176" height="29"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <segments>
+                                    <segment title="Level 1"/>
+                                    <segment title="Level 2"/>
+                                    <segment title="Level 3"/>
+                                </segments>
+                            </segmentedControl>
+                        </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WEE-fE-m1f" firstAttribute="top" secondItem="6OG-gP-b4z" secondAttribute="bottom" constant="8" symbolic="YES" id="0or-Gm-cUV"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="6OG-gP-b4z" secondAttribute="leading" id="4D2-1A-Kni"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="u8I-4O-mRk" secondAttribute="bottom" constant="20" id="4Hl-NN-aaB"/>
+                            <constraint firstItem="WEE-fE-m1f" firstAttribute="top" secondItem="6OG-gP-b4z" secondAttribute="bottom" constant="8" id="6Cx-wM-N0l"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="u8I-4O-mRk" secondAttribute="trailing" id="97g-Ki-6Zc"/>
+                            <constraint firstItem="u8I-4O-mRk" firstAttribute="bottom" secondItem="WEE-fE-m1f" secondAttribute="bottom" id="AfR-ZE-ak1"/>
+                            <constraint firstItem="Dad-tY-VX1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BSm-Vd-qq7"/>
+                            <constraint firstItem="u8I-4O-mRk" firstAttribute="top" secondItem="WEE-fE-m1f" secondAttribute="top" id="CtR-Nr-PbA"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="HA6-rT-jiz" secondAttribute="leading" id="IPp-tp-k8e"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="6OG-gP-b4z" secondAttribute="trailing" id="JBA-s8-BrO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="u8I-4O-mRk" secondAttribute="trailing" id="LnI-yv-goP"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HA6-rT-jiz" secondAttribute="trailing" id="Ls0-6n-1Te"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="6OG-gP-b4z" secondAttribute="bottom" constant="64" id="XIY-st-sYr"/>
+                            <constraint firstItem="Dad-tY-VX1" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="XNg-oY-qOm"/>
+                            <constraint firstItem="WEE-fE-m1f" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Zq4-SQ-HWx"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="6OG-gP-b4z" secondAttribute="bottom" constant="8" symbolic="YES" id="adn-9L-54A"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="WEE-fE-m1f" secondAttribute="bottom" constant="8" symbolic="YES" id="cyz-1O-P7x"/>
+                            <constraint firstItem="HA6-rT-jiz" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="evf-EZ-zIH"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="u8I-4O-mRk" secondAttribute="leading" id="gFm-ah-ivy"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="u8I-4O-mRk" secondAttribute="leading" id="l5l-Hj-eTP"/>
+                            <constraint firstItem="6OG-gP-b4z" firstAttribute="top" secondItem="HA6-rT-jiz" secondAttribute="bottom" constant="8" symbolic="YES" id="rUO-nS-EID"/>
+                            <constraint firstItem="u8I-4O-mRk" firstAttribute="bottom" secondItem="WEE-fE-m1f" secondAttribute="bottom" constant="10" id="wCT-6i-o5m"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="97g-Ki-6Zc"/>
+                                <exclude reference="AfR-ZE-ak1"/>
+                                <exclude reference="gFm-ah-ivy"/>
+                                <exclude reference="0or-Gm-cUV"/>
+                                <exclude reference="6Cx-wM-N0l"/>
+                                <exclude reference="4Hl-NN-aaB"/>
+                                <exclude reference="adn-9L-54A"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="levelSelectorSegmentedControl" destination="Dad-tY-VX1" id="UpH-vu-MnA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="376" y="307"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="BackgroundImage" width="1155" height="578"/>
+        <image name="TitleText" width="1613" height="267"/>
+    </resources>
 </document>
