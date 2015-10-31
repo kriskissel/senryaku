@@ -84,10 +84,34 @@ class MiniMaxAI {
     }
     
     func getMove(board: FastBoard, ply: Int) -> FastBoard {
-        return minimaxSearch(board, ply: ply, humanSimulation: false).1
+        let searchResult = minimaxSearch(board, ply: ply, humanSimulation: false).1
+        var numberOfHumanProtoCornersInSearchResult = 0
+        var numberOfHumanProtoCornersInBoard = 0
+        print("number of human protoCorners in Search Result: \(numberOfHumanProtoCornersInSearchResult)")
+        print("number of human protoCorners in previous board: \(numberOfHumanProtoCornersInBoard)")
+        for r in 0...7 {
+            for c in 0...7 {
+                numberOfHumanProtoCornersInBoard += board.countProtoCornersThroughTile(r, column: c , mark: humanMark)
+                numberOfHumanProtoCornersInSearchResult += searchResult.countProtoCornersThroughTile(r, column: c , mark: humanMark)
+            }
+        }
+        if (numberOfHumanProtoCornersInBoard > numberOfHumanProtoCornersInSearchResult || numberOfHumanProtoCornersInSearchResult == 0) {
+            return searchResult
+        }
+        else {
+            return blockingMove(board)!
+        }
     }
     
-    // NEED TO ADD BLOCKING MOVE FOR WHEN THE OPPONENT HAS MORE THAN ONE WAY TO WIN.
-    
+    func blockingMove(board: FastBoard) -> FastBoard? {
+        for r in 0...7 {
+            for c in 0...7 {
+                if (board.countProtoCornersThroughTile(r, column: c , mark: humanMark) > 0 && board.getValue(r, column: c ) == 0) {
+                    return board.placePiece(r, column: c , mark: aiMark)
+                }
+            }
+        }
+        return nil // this should never fire when it is actually used    }
+    }
     
 }
