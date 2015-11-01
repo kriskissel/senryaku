@@ -84,6 +84,11 @@ class MiniMaxAI {
     }
     
     func getMove(board: FastBoard, ply: Int) -> FastBoard {
+        
+        if (board.usedLocations[1]!.count + board.usedLocations[2]!.count <= 2) {
+            return randomizeOpening(board)!
+        }
+        
         let searchResult = minimaxSearch(board, ply: ply, humanSimulation: false).1
         var numberOfHumanProtoCornersInSearchResult = 0
         var numberOfHumanProtoCornersInBoard = 0
@@ -113,5 +118,36 @@ class MiniMaxAI {
         }
         return nil // this should never fire when it is actually used    }
     }
+    
+    func randomizeOpening(board: FastBoard) -> FastBoard? {
+        
+        let n = board.usedLocations[1]!.count + board.usedLocations[2]!.count
+        if (n == 0) {
+            let k = Int(arc4random_uniform(UInt32(4)))
+            let l = Int(arc4random_uniform(UInt32(4)))
+            let r = 2 + k
+            let c = 2 + l
+            return board.placePiece(r, column: c , mark: aiMark)
+        }
+        if ( n <= 2 ) {
+            var possiblePlacementLocations = [(Int,Int)]()
+            let usedLocations = Array( board.usedLocations[1]!) + Array( board.usedLocations[2]!)
+            for location in usedLocations {
+                let column = location % 8
+                let row = (location - column) / 8
+                for difference in [(2,0),(2,1),(2,2),(2,-1),(2,-2),(-2,-2),(-2,-1),(-2,0),(-2,1),(-2,2),(-1,2),(0,2),(1,2),(-1,-2),(0,-2),(1,-2)] {
+                    let r = row + difference.0
+                    let c = column + difference.1
+                    if (r >= 2 && r <= 5 && c >= 2 && c <= 5 &&  board.getValue(r, column: c) == 0) {
+                        possiblePlacementLocations.append((r,c))
+                    }
+                }
+            }
+            let choice = Int(arc4random_uniform(UInt32(possiblePlacementLocations.count)))
+            return board.placePiece(possiblePlacementLocations[choice].0, column: possiblePlacementLocations[choice].1, mark: aiMark)
+        }
+        return nil
+    }
+
     
 }

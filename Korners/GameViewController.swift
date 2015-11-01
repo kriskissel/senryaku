@@ -30,6 +30,16 @@ extension SKNode {
 class GameViewController: UIViewController {
     
     var valueToPass: Int!
+    
+    weak var gameScene: GameScene?
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        print("GameViewController viewWillLayoutSubviews: width = \(self.view.bounds.width), height = \(self.view.bounds.height)")
+        if let scene = gameScene {
+            scene.layoutChanged = true
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +49,9 @@ class GameViewController: UIViewController {
 
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
             // Configure the view.
+            
+            gameScene = scene
+            
             let skView = self.view as! SKView
             skView.showsFPS = true
             skView.showsNodeCount = true
@@ -61,10 +74,13 @@ class GameViewController: UIViewController {
             }
     }
 
+    /*
     override func shouldAutorotate() -> Bool {
         return false // changed from default of true
     }
+    */
 
+    /*
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         /*
         // default configuration
@@ -78,6 +94,7 @@ class GameViewController: UIViewController {
         return UIInterfaceOrientationMask.Portrait
         
     }
+    */
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

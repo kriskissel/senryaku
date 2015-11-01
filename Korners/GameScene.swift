@@ -36,6 +36,12 @@ class GameScene: SKScene {
     
     weak var viewController: UIViewController? // made this weak so that the gae scence and game view controller can be released from memory
     
+    var layoutChanged = false { didSet {
+        print("layoutChanged value has been changed.") }
+        // USE THIS OBSERVER TO INITIATE REPOSITIONING AND RESCALING OF BUTTONS WHEN
+        // SWITCHING BETWEEN LANDSCAPE AND PORTRAIT VIEWS
+        }
+    
     var aiPly: Int!
     
     var squareSizeMultiplier = CGFloat(10) // used to determine the size of tiles for display on various devices, 10 is just a temporary placeholder
@@ -71,15 +77,6 @@ class GameScene: SKScene {
         /* Setup your scene here */
         self.scaleMode = .ResizeFill
         
-        // for testing
-        print("Passed value from GameViewController: \(aiPly)")
-        let b1 = buildGameBoardFromPiecePlacements([(4,4),(5,5)], player2tiles: [(0,0),(0,1),(0,2),(1,0),(2,0)])
-        print("test board:")
-        print(b1)
-        print("ai position rating:")
-        print(ai.ratePosition(b1))
-        
-        
         
         // Add the wallpaper
         
@@ -91,8 +88,8 @@ class GameScene: SKScene {
         backgroundImage.alpha = ColorConstants.WallpaperOpacity
         
         // compute the scale factor necessary to fill screen with wallpaper without distorting it
-        let xScaleFactor = self.view!.frame.size.width / backgroundImage.size.width
-        let yScaleFactor = self.view!.frame.size.height / backgroundImage.size.height
+        let xScaleFactor = self.view!.bounds.width / backgroundImage.size.width
+        let yScaleFactor = self.view!.bounds.height / backgroundImage.size.height
         let resizingScaleFactor = max(xScaleFactor, yScaleFactor)
         backgroundImage.size.height = backgroundImage.size.height * resizingScaleFactor
         backgroundImage.size.width = backgroundImage.size.width * resizingScaleFactor
@@ -115,12 +112,12 @@ class GameScene: SKScene {
     
     func drawBoard() {
         // screen information
-        let sceneWidth = self.size.width
-        let sceneHeight = self.size.height
-        print("Scene height: \(sceneHeight) - Scene Width: \(sceneWidth)")
+        //let sceneWidth = self.size.width
+        //let sceneHeight = self.size.height
+        //print("Scene height: \(sceneHeight) - Scene Width: \(sceneWidth)")
         
-        let viewHeight = self.view!.frame.size.height
-        let viewWidth = self.view!.frame.size.width
+        let viewHeight = self.view!.bounds.height
+        let viewWidth = self.view!.bounds.width
         print("View height: \(viewHeight) - View Width: \(viewWidth)")
         
         squareSizeMultiplier = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
@@ -154,8 +151,8 @@ class GameScene: SKScene {
     
     func drawButtonsAndStatusLabel(){
 
-        let viewHeight = self.view!.frame.size.height
-        let viewWidth = self.view!.frame.size.width
+        let viewHeight = self.view!.bounds.height
+        let viewWidth = self.view!.bounds.width
         
         let verticalSpaceAboveGameBoard = viewHeight - 8 * squareSizeMultiplier - 2 * CGFloat( ColorConstants.OffsetFromBottom)
         let verticalSpaceForEachVisualComponent = verticalSpaceAboveGameBoard / 3
@@ -651,13 +648,20 @@ class GameScene: SKScene {
     func displayGameState() {
         if (gameState == GameState.ReadyForPlayerMove) {
             currentPlayerLabel.text = "Your Move"   // Change this to ASSET
+            currentPlayerLabel.fontColor = UIColor.blackColor()
             //print(ai.ratePosition(currentGameBoard))
         }
         if (gameState == GameState.WaitingForAI) {
             currentPlayerLabel.text = "Thinking"  // Change this to ASSET
+            currentPlayerLabel.fontColor = UIColor.blueColor()
         }
         if (gameState == GameState.GameOver) {
-            currentPlayerLabel.text = "Game Over"  // Change this to ASSET
+            let message: String
+            let messageColor = UIColor.blackColor()
+            if (currentGameBoard.win == 1) {message = "You Win!"}
+            else {message = "Game Over"}
+            currentPlayerLabel.text = message   // Change this to ASSET
+            currentPlayerLabel.fontColor = messageColor
         }
     }
     
@@ -671,7 +675,7 @@ class GameScene: SKScene {
             //print("attempting to highlight tiles:")
             //print([s![0],s![1],s![2],s![3],s![4]])
             highlightTiles([s![0],s![1],s![2],s![3],s![4]])
-            alertGameOver()
+            //alertGameOver()
         }
     }
     
