@@ -139,18 +139,27 @@ class GameScene: SKScene {
     }
     
     func recenterBoard() {
+        // board tiles
         let viewHeight = self.view!.bounds.height
         let viewWidth = self.view!.bounds.width
         let squareSize:CGFloat = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
         let xOffset: CGFloat
         let yOffset: CGFloat
+        let availableWidth: CGFloat
+        let availableHeight: CGFloat
         if (viewWidth < viewHeight){
+            // portrait
             xOffset = viewWidth - (8 * squareSize)
             yOffset = xOffset // may need to change this for SplitView
+            availableWidth = viewWidth
+            availableHeight = viewHeight - 8.5 * squareSize
         }
         else {
+            // landscape
             yOffset = viewHeight - (8 * squareSize)
             xOffset = viewWidth - (8 * squareSize) // - yOffset
+            availableWidth = viewWidth - 8.5 * squareSize
+            availableHeight = viewHeight
         }
         print("recentering board for \(viewWidth) x \(viewHeight)")
         for row in 0...7 {
@@ -160,7 +169,25 @@ class GameScene: SKScene {
                 }
             }
         }
-    }
+        
+        // title graphic
+        let maxHeight = availableHeight / 3
+        let maxWidth = availableWidth - squareSize
+        let titleWidth = min(maxWidth, 6 * maxHeight)
+        let titleHeight = min(maxHeight, maxWidth / 6)
+        let titlePosition = CGPointMake(availableWidth / 2, viewHeight - squareSize / 2 - titleHeight / 2)
+        let titleSize = CGSizeMake(titleWidth, titleHeight)
+        if let title = self.childNodeWithName("gameTitleLabel") as! SKSpriteNode? {
+            title.size = titleSize
+            title.position = titlePosition
+        }
+        
+        // status label
+        let statusPosition = CGPointMake(availableWidth / 2, viewHeight - squareSize / 2 - titleHeight / 2 - maxHeight)
+        if let status = self.childNodeWithName("statusLabel") as! SKLabelNode? {
+            status.position = statusPosition
+        }
+   }
     
     func drawButtonsAndStatusLabel(){
 
@@ -207,6 +234,7 @@ class GameScene: SKScene {
         currentPlayerLabel.fontSize = 0.5 * verticalSpaceForEachVisualComponent
         currentPlayerLabel.position = CGPointMake(viewWidth / 2, currentPlayerLabelVerticalCenter)
         currentPlayerLabel.fontColor = UIColor(white: 0, alpha: 1)
+        currentPlayerLabel.name = "statusLabel"
         self.addChild(currentPlayerLabel)
         
         let gameTitleLabelVerticalCenter = currentPlayerLabelVerticalCenter + visualElementHeight
@@ -217,9 +245,8 @@ class GameScene: SKScene {
         gameTitleLabel = SKSpriteNode(imageNamed: "TitleText")
         gameTitleLabel.position = CGPointMake(viewWidth / 2, gameTitleLabelVerticalCenter)
         gameTitleLabel.size = CGSizeMake(gameTitleWidth, gameTitleHeight)
+        gameTitleLabel.name = "gameTitleLabel"
         self.addChild(gameTitleLabel!)
-        
-        
     }
     
     
