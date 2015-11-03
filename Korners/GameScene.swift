@@ -139,20 +139,31 @@ class GameScene: SKScene {
     }
     
     func recenterBoard() {
-        // board tiles
+        // recalculate reference sizes
         let viewHeight = self.view!.bounds.height
         let viewWidth = self.view!.bounds.width
         let squareSize:CGFloat = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
+        let subSquareSize = squareSize - 2
+        pieceSize = squareSize - 4
         let xOffset: CGFloat
         let yOffset: CGFloat
         let availableWidth: CGFloat
         let availableHeight: CGFloat
+        let okayX: CGFloat
+        let okayY: CGFloat
+        let cancelX: CGFloat
+        let cancelY: CGFloat
         if (viewWidth < viewHeight){
             // portrait
             xOffset = viewWidth - (8 * squareSize)
             yOffset = xOffset // may need to change this for SplitView
             availableWidth = viewWidth
             availableHeight = viewHeight - 8.5 * squareSize
+            okayX = availableWidth / 2 - 2 * squareSize
+            okayY = viewHeight - squareSize / 2 - 2 * availableHeight / 3 // play with this
+            cancelX = availableWidth / 2 + 2 * squareSize
+            cancelY = viewHeight - squareSize / 2 - 2 * availableHeight / 3 // play with this
+            
         }
         else {
             // landscape
@@ -160,12 +171,25 @@ class GameScene: SKScene {
             xOffset = viewWidth - (8 * squareSize) // - yOffset
             availableWidth = viewWidth - 8.5 * squareSize
             availableHeight = viewHeight
+            okayX = availableWidth / 2
+            okayY = availableHeight / 2
+            cancelX = availableWidth / 2
+            cancelY = availableHeight / 4
         }
+        
+        // tiles
         print("recentering board for \(viewWidth) x \(viewHeight)")
         for row in 0...7 {
             for col in 0...7 {
                 if let square = squareWithName("\(col)\(row)"){
                     square.position = CGPointMake(CGFloat(col) * squareSize + xOffset, CGFloat(row) * squareSize + yOffset)
+                    square.size = CGSizeMake(subSquareSize, subSquareSize)
+                    if let piece = square.childNodeWithName("player1") as! SKSpriteNode? {
+                        piece.size = CGSizeMake(pieceSize, pieceSize)
+                    }
+                    if let piece = square.childNodeWithName("player2") as! SKSpriteNode? {
+                        piece.size = CGSizeMake(pieceSize, pieceSize)
+                    }
                 }
             }
         }
@@ -189,12 +213,12 @@ class GameScene: SKScene {
         }
         
         // okay and cancel buttons
-        let okayPosition = CGPointMake(availableWidth / 2 - 2 * squareSize, viewHeight - squareSize / 2 - titleHeight / 2 - 2*maxHeight)
+        let okayPosition = CGPointMake(okayX, okayY)
         if let okay = self.childNodeWithName("okayMoveButton") as! SKSpriteNode? {
             okay.position = okayPosition
         }
         
-        let cancelPosition = CGPointMake(availableWidth / 2 + 2 * squareSize, viewHeight - squareSize / 2 - titleHeight / 2 - 2*maxHeight)
+        let cancelPosition = CGPointMake(cancelX, cancelY)
         if let cancel = self.childNodeWithName("cancelMoveButton") as! SKSpriteNode? {
             cancel.position = cancelPosition
         }
