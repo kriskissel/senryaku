@@ -232,15 +232,21 @@ class GameScene: SKScene {
             status.fontSize = 0.75 * titleHeight
         }
         
-        // okay and cancel buttons
+        // okay and cancel buttons, playAgain and backButton
         let okayPosition = CGPointMake(okayX, okayY)
         if let okay = self.childNodeWithName("okayMoveButton") as! SKSpriteNode? {
             okay.position = okayPosition
+        }
+        if let again = self.childNodeWithName("playAgainButton") as! SKLabelNode? {
+            again.position = okayPosition
         }
         
         let cancelPosition = CGPointMake(cancelX, cancelY)
         if let cancel = self.childNodeWithName("cancelMoveButton") as! SKSpriteNode? {
             cancel.position = cancelPosition
+        }
+        if let backButton = self.childNodeWithName("backButton") as! SKLabelNode? {
+            backButton.position = cancelPosition
         }
         
         // wallpaper
@@ -300,12 +306,23 @@ class GameScene: SKScene {
         cancelMoveButton.hidden = true
         
         let backButton = SKLabelNode(fontNamed: "Arial")
-        backButton.text = "Back to Menu"
+        backButton.text = "Change Level"
         backButton.fontSize = 0.35 * verticalSpaceForEachVisualComponent
         backButton.fontColor = UIColor(red: 0, green: 0, blue: 255, alpha: 1)
         backButton.name = "backButton"
         backButton.position = CGPointMake(backButton.fontSize * 3.3, viewHeight - 26)
         self.addChild(backButton)
+        backButton.hidden = true
+        
+        let playAgainButton = SKLabelNode(fontNamed: "Arial")
+        playAgainButton.text = "Play Again"
+        playAgainButton.fontSize = 0.35 * verticalSpaceForEachVisualComponent
+        playAgainButton.fontColor = UIColor(red: 0, green: 0, blue: 255, alpha: 1)
+        playAgainButton.name = "playAgainButton"
+        playAgainButton.position = CGPointMake(playAgainButton.fontSize * 3.3, viewHeight)
+        self.addChild(playAgainButton)
+        playAgainButton.hidden = true
+        
         
         let currentPlayerLabelVerticalCenter = ColorConstants.OffsetFromBottom + boardHeight + 1.5 * visualElementHeight - squareSizeMultiplier
         
@@ -355,6 +372,10 @@ class GameScene: SKScene {
                 case "backButton":
                     print("Pressed Back Button")
                     pressedBackButton()
+                    
+                case "playAgainButton":
+                    resetGame()
+                    gameState = GameState.ReadyForPlayerMove
                     
                 case "okayMoveButton":
                     //print("pressed okayMoveButton")
@@ -511,7 +532,6 @@ class GameScene: SKScene {
         highlightTiles(legalJumpTargetTiles)
         revealCommitButtons()
     }
-    
     
     func displayAIJumpSequenceAnimated() {
         
@@ -753,7 +773,13 @@ class GameScene: SKScene {
         else {return ""}
     }
     
-
+    func resetGame(){
+        currentGameBoard = FastBoard()
+        currentViewedBoard = FastBoard()
+        applyCurrentGameBoard()
+        self.childNodeWithName("playAgainButton")?.hidden = true
+        self.childNodeWithName("backButton")?.hidden = true
+    }
     
     func applyCurrentGameBoard() {
         clearPiecesFromView()
@@ -783,6 +809,8 @@ class GameScene: SKScene {
             else {message = "Game Over"}
             currentPlayerLabel.text = message   // Change this to ASSET
             currentPlayerLabel.fontColor = messageColor
+            self.childNodeWithName("backButton")?.hidden = false
+            self.childNodeWithName("playAgainButton")?.hidden = false
         }
     }
     
@@ -800,10 +828,12 @@ class GameScene: SKScene {
         }
     }
     
+    /*
     func alertGameOver() {
         let alert = UIAlertView(title: "GAME OVER", message: "Player \(playerNumber(currentPlayer)) wins!", delegate: nil, cancelButtonTitle: "Okay")
         alert.show()
     }
+    */
     
     func checkForDraw() {
         let numberOfUsedLocations = currentGameBoard.usedLocations[1]!.count + currentGameBoard.usedLocations[2]!.count
