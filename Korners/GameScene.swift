@@ -37,9 +37,11 @@ class GameScene: SKScene {
     weak var viewController: UIViewController? // made this weak so that the gae scence and game view controller can be released from memory
     
     var layoutChanged = false { didSet {
-        print("layoutChanged value has been changed.") }
+        print("layoutChanged value has been changed.")
         // USE THIS OBSERVER TO INITIATE REPOSITIONING AND RESCALING OF BUTTONS WHEN
         // SWITCHING BETWEEN LANDSCAPE AND PORTRAIT VIEWS
+        if (layoutChanged == true) {recenterBoard(); layoutChanged = false;}
+        }
         }
     
     var aiPly: Int!
@@ -71,15 +73,23 @@ class GameScene: SKScene {
         displayGameState()
         } }
     
+    var boardSquares = [SKNode]()
+    
     var userJumpSequence = [(Int,Int)]()
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         self.scaleMode = .ResizeFill
-        
-        
-        // Add the wallpaper
-        
+        addWallpaper()
+        drawBoard()
+        recenterBoard()
+        drawButtonsAndStatusLabel()
+        currentGameBoard = FastBoard()
+        applyCurrentGameBoard()
+        currentViewedBoard = currentGameBoard
+    }
+    
+    func addWallpaper() {
         self.backgroundColor = ColorConstants.BackgroundColor
         
         let backgroundImage = SKSpriteNode(imageNamed: "Wallpaper1.png")
@@ -96,25 +106,9 @@ class GameScene: SKScene {
         
         self.addChild(backgroundImage)
         backgroundImage.zPosition = -10
-        
-        
-        // Draw the board
-        drawBoard()
-        
-        // Draw the buttons and status label
-        drawButtonsAndStatusLabel()
-
-        currentGameBoard = FastBoard()
-        applyCurrentGameBoard()
-        currentViewedBoard = currentGameBoard
-        
     }
     
     func drawBoard() {
-        // screen information
-        //let sceneWidth = self.size.width
-        //let sceneHeight = self.size.height
-        //print("Scene height: \(sceneHeight) - Scene Width: \(sceneWidth)")
         
         let viewHeight = self.view!.bounds.height
         let viewWidth = self.view!.bounds.width
@@ -123,8 +117,6 @@ class GameScene: SKScene {
         squareSizeMultiplier = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
         print("square size multiplier: \(squareSizeMultiplier)")
         pieceSize = squareSizeMultiplier - 4
-
-        
         
         // Board parameters
         let numRows = 8
@@ -132,19 +124,40 @@ class GameScene: SKScene {
         let squareSize = CGSizeMake(squareSizeMultiplier, squareSizeMultiplier)
         let subSquareSize = CGSizeMake(squareSize.width-2,squareSize.height-2)
         let xOffset: CGFloat = (viewWidth - (8 * squareSize.width))
-        let yOffset: CGFloat = ColorConstants.OffsetFromBottom + visualElementHeight + (squareSizeMultiplier / 2)
+        let yOffset: CGFloat =  (squareSizeMultiplier / 2) + ColorConstants.OffsetFromBottom // + visualElementHeight
         for row in 0...numRows-1 {
             for col in 0...numCols-1 {
-                // Letter for this column
-                // let colChar = Array(alphas.characters)[col] // no longer using letters
-                // Determine the color of square
-                // let color = toggle ? SKColor.whiteColor() : SKColor.blueColor()
                 let color = ColorConstants.NormalColor
                 let square = SKSpriteNode(color: color, size: subSquareSize)
                 square.position = CGPointMake(CGFloat(col) * squareSize.width + xOffset, CGFloat(row) * squareSize.height + yOffset)
                 // Set sprite's name (e.g. 07, 24, 31) as column and row (like reading top left to bottom right)
                 square.name = "\(col)\(7-row)"
                 self.addChild(square)
+                boardSquares.append(square)
+            }
+        }
+    }
+    
+    func recenterBoard() {
+        let viewHeight = self.view!.bounds.height
+        let viewWidth = self.view!.bounds.width
+        let squareSize:CGFloat = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
+        let xOffset: CGFloat
+        let yOffset: CGFloat
+        if (viewWidth < viewHeight){
+            xOffset = viewWidth - (8 * squareSize)
+            yOffset = xOffset // may need to change this for SplitView
+        }
+        else {
+            yOffset = viewHeight - (8 * squareSize)
+            xOffset = viewWidth - (8 * squareSize) // - yOffset
+        }
+        print("recentering board for \(viewWidth) x \(viewHeight)")
+        for row in 0...7 {
+            for col in 0...7 {
+                if let square = squareWithName("\(col)\(row)"){
+                    square.position = CGPointMake(CGFloat(col) * squareSize + xOffset, CGFloat(row) * squareSize + yOffset)
+                }
             }
         }
     }
@@ -159,7 +172,7 @@ class GameScene: SKScene {
         
         let okayButtonHorizontalCenter = (viewWidth / 2 ) - 2 * squareSizeMultiplier
         let cancelButtonHorizontalCenter = (viewWidth / 2) + 2 * squareSizeMultiplier
-        let okayAndCancelVerticalCenter = ColorConstants.OffsetFromBottom + ( visualElementHeight / 2) // This puts the buttons below the game board.
+        let okayAndCancelVerticalCenter = ColorConstants.OffsetFromBottom + ( visualElementHeight / 2) + squareSizeMultiplier * 8 // This puts the buttons above the game board.
         let okayAndCancelButtonHeight = 0.8 * min(verticalSpaceForEachVisualComponent, viewWidth / 4)
         let okayAndCancelButtonWidth = 2 * okayAndCancelButtonHeight
         
