@@ -93,9 +93,10 @@ class GameScene: SKScene {
         self.backgroundColor = ColorConstants.BackgroundColor
         
         let backgroundImage = SKSpriteNode(imageNamed: "Wallpaper1.png")
-        backgroundImage.position.x = self.view!.frame.width / 2
-        backgroundImage.position.y = self.view!.frame.height / 2
+        backgroundImage.position.x = self.view!.bounds.width / 2
+        backgroundImage.position.y = self.view!.bounds.height / 2
         backgroundImage.alpha = ColorConstants.WallpaperOpacity
+        backgroundImage.name = "wallpaper"
         
         // compute the scale factor necessary to fill screen with wallpaper without distorting it
         let xScaleFactor = self.view!.bounds.width / backgroundImage.size.width
@@ -153,7 +154,21 @@ class GameScene: SKScene {
         let okayY: CGFloat
         let cancelX: CGFloat
         let cancelY: CGFloat
-        if (viewWidth < viewHeight){
+        var statusY: CGFloat?
+        if (viewWidth < viewHeight / 2){
+            // split view
+            xOffset = viewWidth - (8 * squareSize)
+            yOffset = viewHeight / 6 // may need to change this for SplitView
+            availableWidth = viewWidth
+            availableHeight = viewHeight - 8.5 * squareSize
+            okayX = availableWidth / 2
+            okayY = viewHeight -  availableHeight / 2 // play with this
+            cancelX = availableWidth / 2
+            cancelY = viewHeight - 2 * availableHeight / 3 // play with this
+            statusY = viewHeight - availableHeight / 4
+        }
+        
+        else if (viewWidth < viewHeight){
             // portrait
             xOffset = viewWidth - (8 * squareSize)
             yOffset = xOffset // may need to change this for SplitView
@@ -163,7 +178,7 @@ class GameScene: SKScene {
             okayY = viewHeight - squareSize / 2 - 2 * availableHeight / 3 // play with this
             cancelX = availableWidth / 2 + 2 * squareSize
             cancelY = viewHeight - squareSize / 2 - 2 * availableHeight / 3 // play with this
-            
+            statusY = nil
         }
         else {
             // landscape
@@ -175,6 +190,7 @@ class GameScene: SKScene {
             okayY = availableHeight / 2
             cancelX = availableWidth / 2
             cancelY = availableHeight / 4
+            statusY = viewHeight - 0.3 * availableHeight
         }
         
         // tiles
@@ -207,9 +223,13 @@ class GameScene: SKScene {
         }
         
         // status label
-        let statusPosition = CGPointMake(availableWidth / 2, viewHeight - squareSize / 2 - titleHeight / 2 - maxHeight)
+        if (statusY == nil){
+            statusY = viewHeight - squareSize / 2 - 0.6 * titleHeight - maxHeight
+        }
+        let statusPosition = CGPointMake(availableWidth / 2, statusY!)
         if let status = self.childNodeWithName("statusLabel") as! SKLabelNode? {
             status.position = statusPosition
+            status.fontSize = 0.75 * titleHeight
         }
         
         // okay and cancel buttons
@@ -222,6 +242,20 @@ class GameScene: SKScene {
         if let cancel = self.childNodeWithName("cancelMoveButton") as! SKSpriteNode? {
             cancel.position = cancelPosition
         }
+        
+        // wallpaper
+        
+        if let backgroundImage = self.childNodeWithName("wallpaper") as! SKSpriteNode? {
+            backgroundImage.position.x = self.view!.bounds.width / 2
+            backgroundImage.position.y = self.view!.bounds.height / 2
+            let xScaleFactor = self.view!.bounds.width / backgroundImage.size.width
+            let yScaleFactor = self.view!.bounds.height / backgroundImage.size.height
+            let resizingScaleFactor = max(xScaleFactor, yScaleFactor)
+            backgroundImage.size.height = backgroundImage.size.height * resizingScaleFactor
+            backgroundImage.size.width = backgroundImage.size.width * resizingScaleFactor
+        }
+        
+        
    }
     
     func drawButtonsAndStatusLabel(){
@@ -370,6 +404,7 @@ class GameScene: SKScene {
                     }
                     
                 default:
+                    if (nameOfSpriteTouched == "" || nameOfSpriteTouched == "wallpaper") {break}
                     // might need to redo this with a switch instead of if-else
                     let touchedSquareCoordinates = getSquareCoordinatesFromSquareName(placeTouched.name!)
                     let row = touchedSquareCoordinates.1
