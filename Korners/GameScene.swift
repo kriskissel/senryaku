@@ -187,6 +187,17 @@ class GameScene: SKScene {
         if let status = self.childNodeWithName("statusLabel") as! SKLabelNode? {
             status.position = statusPosition
         }
+        
+        // okay and cancel buttons
+        let okayPosition = CGPointMake(availableWidth / 2 - 2 * squareSize, viewHeight - squareSize / 2 - titleHeight / 2 - 2*maxHeight)
+        if let okay = self.childNodeWithName("okayMoveButton") as! SKSpriteNode? {
+            okay.position = okayPosition
+        }
+        
+        let cancelPosition = CGPointMake(availableWidth / 2 + 2 * squareSize, viewHeight - squareSize / 2 - titleHeight / 2 - 2*maxHeight)
+        if let cancel = self.childNodeWithName("cancelMoveButton") as! SKSpriteNode? {
+            cancel.position = cancelPosition
+        }
    }
     
     func drawButtonsAndStatusLabel(){
@@ -194,8 +205,19 @@ class GameScene: SKScene {
         let viewHeight = self.view!.bounds.height
         let viewWidth = self.view!.bounds.width
         
-        let verticalSpaceAboveGameBoard = viewHeight - 8 * squareSizeMultiplier - 2 * CGFloat( ColorConstants.OffsetFromBottom)
-        let verticalSpaceForEachVisualComponent = verticalSpaceAboveGameBoard / 3
+        let verticalSpaceForEachVisualComponent: CGFloat
+        
+        if (viewHeight > viewWidth){
+            // portrait
+            let verticalSpaceAboveGameBoard = viewHeight - 8 * squareSizeMultiplier - 2 * CGFloat( ColorConstants.OffsetFromBottom)
+            verticalSpaceForEachVisualComponent = verticalSpaceAboveGameBoard / 3
+        }
+        else{
+            // landscape
+            let verticalSpaceAboveGameBoard = viewWidth - 8 * squareSizeMultiplier - 2 * CGFloat( ColorConstants.OffsetFromBottom)
+            verticalSpaceForEachVisualComponent = verticalSpaceAboveGameBoard / 3
+        }
+
         
         let okayButtonHorizontalCenter = (viewWidth / 2 ) - 2 * squareSizeMultiplier
         let cancelButtonHorizontalCenter = (viewWidth / 2) + 2 * squareSizeMultiplier
