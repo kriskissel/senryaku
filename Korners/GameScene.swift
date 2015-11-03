@@ -155,6 +155,7 @@ class GameScene: SKScene {
         let cancelX: CGFloat
         let cancelY: CGFloat
         var statusY: CGFloat?
+        let playAgainScale: CGFloat
         if (viewWidth < viewHeight / 2){
             // split view
             xOffset = viewWidth - (8 * squareSize)
@@ -166,6 +167,7 @@ class GameScene: SKScene {
             cancelX = availableWidth / 2
             cancelY = viewHeight - 2 * availableHeight / 3 // play with this
             statusY = viewHeight - availableHeight / 4
+            playAgainScale = 1
         }
         
         else if (viewWidth < viewHeight){
@@ -179,6 +181,7 @@ class GameScene: SKScene {
             cancelX = availableWidth / 2 + 2 * squareSize
             cancelY = viewHeight - squareSize / 2 - 2 * availableHeight / 3 // play with this
             statusY = nil
+            playAgainScale = 0.75
         }
         else {
             // landscape
@@ -191,6 +194,7 @@ class GameScene: SKScene {
             cancelX = availableWidth / 2
             cancelY = availableHeight / 4
             statusY = viewHeight - 0.3 * availableHeight
+            playAgainScale = 1
         }
         
         // tiles
@@ -239,6 +243,7 @@ class GameScene: SKScene {
         }
         if let again = self.childNodeWithName("playAgainButton") as! SKLabelNode? {
             again.position = okayPosition
+            again.fontSize = 0.6 * titleHeight * playAgainScale
         }
         
         let cancelPosition = CGPointMake(cancelX, cancelY)
@@ -247,6 +252,7 @@ class GameScene: SKScene {
         }
         if let backButton = self.childNodeWithName("backButton") as! SKLabelNode? {
             backButton.position = cancelPosition
+            backButton.fontSize = 0.6 * titleHeight * playAgainScale
         }
         
         // wallpaper
