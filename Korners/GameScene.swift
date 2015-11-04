@@ -734,16 +734,21 @@ class GameScene: SKScene {
     
     func revealCancelMoveButton() {
         self.childNodeWithName("cancelMoveButton")?.hidden = false
+        self.childNodeWithName("cancelMoveButton")?.zPosition = 10
     }
     
     func revealCommitButtons() {
         self.childNodeWithName("okayMoveButton")?.hidden = false
         self.childNodeWithName("cancelMoveButton")?.hidden = false
+        self.childNodeWithName("okayMoveButton")?.zPosition = 10
+        self.childNodeWithName("cancelMoveButton")?.zPosition = 10
     }
     
     func hideCommitButtons() {
         self.childNodeWithName("okayMoveButton")?.hidden = true
         self.childNodeWithName("cancelMoveButton")?.hidden = true
+        self.childNodeWithName("okayMoveButton")?.zPosition = -1
+        self.childNodeWithName("cancelMoveButton")?.zPosition = -1
     }
     
     func submitCurrentViewAsMove() {
