@@ -288,12 +288,17 @@ class GameScene: SKScene {
             verticalSpaceForEachVisualComponent = verticalSpaceAboveGameBoard / 3
         }
 
+        // special for iPhone 4s
+        var buttonScaleFactor = CGFloat(1)
+        if (max(viewHeight,viewWidth) == 480 && min(viewHeight,viewWidth) == 320){
+            buttonScaleFactor = CGFloat(1.4)
+        }
         
         let okayButtonHorizontalCenter = (viewWidth / 2 ) - 2 * squareSizeMultiplier
         let cancelButtonHorizontalCenter = (viewWidth / 2) + 2 * squareSizeMultiplier
         let okayAndCancelVerticalCenter = ColorConstants.OffsetFromBottom + ( visualElementHeight / 2) + squareSizeMultiplier * 8 // This puts the buttons above the game board.
-        let okayAndCancelButtonHeight = 0.8 * min(verticalSpaceForEachVisualComponent, viewWidth / 4)
-        let okayAndCancelButtonWidth = 2 * okayAndCancelButtonHeight
+        let okayAndCancelButtonHeight = buttonScaleFactor * 0.8 * min(verticalSpaceForEachVisualComponent, viewWidth / 4)
+        let okayAndCancelButtonWidth = buttonScaleFactor * 2 * okayAndCancelButtonHeight
         
         squareSizeMultiplier = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
         
@@ -376,12 +381,17 @@ class GameScene: SKScene {
                     
                     
                 case "backButton":
-                    print("Pressed Back Button")
-                    pressedBackButton()
+                    if (gameState == GameState.GameOver){
+                        print("Pressed Back Button")
+                        pressedBackButton()
+                    }
+                    
                     
                 case "playAgainButton":
-                    resetGame()
-                    gameState = GameState.ReadyForPlayerMove
+                    if (gameState == GameState.GameOver) {
+                        resetGame()
+                        gameState = GameState.ReadyForPlayerMove
+                    }
                     
                 case "okayMoveButton":
                     //print("pressed okayMoveButton")
