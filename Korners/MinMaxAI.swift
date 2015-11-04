@@ -85,6 +85,10 @@ class MiniMaxAI {
     
     func getMove(board: FastBoard, ply: Int) -> FastBoard {
         
+        if let winningBoard = checkForWinningMove(board){
+            return winningBoard
+        }
+        
         if (board.usedLocations[1]!.count + board.usedLocations[2]!.count <= 2) {
             return randomizeOpening(board)!
         }
@@ -106,6 +110,20 @@ class MiniMaxAI {
         else {
             return blockingMove(board)!
         }
+    }
+    
+    func checkForWinningMove(board: FastBoard) -> FastBoard? {
+        for r in 0...7 {
+            for c in 0...7 {
+                if (board.getValue(r, column: c) == 0) {
+                    let newBoard = board.placePiece(r, column: c, mark: aiMark)
+                    if (newBoard.win == aiMark) {
+                        return newBoard
+                    }
+                }
+            }
+        }
+        return nil
     }
     
     func blockingMove(board: FastBoard) -> FastBoard? {

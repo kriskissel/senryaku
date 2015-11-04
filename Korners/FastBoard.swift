@@ -299,6 +299,10 @@ class FastBoard : CustomStringConvertible {
         return 0
     }
     
+    func checkForWin(row row: Int, column: Int, mark: Int) -> Int {
+        return checkForWin(index: 8 * row + column, mark: mark)
+    }
+    
     func countProtoCornersThroughTile(row: Int, column: Int, mark: Int) -> Int {
         var count = 0
         let arrayIndex = coordinatesToArrayIndex(row, column: column)
