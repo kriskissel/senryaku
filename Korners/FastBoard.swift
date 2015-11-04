@@ -14,6 +14,8 @@ import Foundation
 private let winSites = buildWinSites(true)
 let protoCornerStes = buildWinSites(false)
 
+let miniCornerSites = buildMiniCornerGaps()
+
 private let adjacencySites = buildAdjacencySites()
 private let jumpTargets = buildJumpTargets()
 
@@ -318,6 +320,14 @@ class FastBoard : CustomStringConvertible {
         return count
     }
     
+    func checkForMiniCornerGapAtTile(row: Int, column: Int, mark: Int) -> Bool {
+        let index = 8 * row + column
+        for locations in miniCornerSites[index]!{
+            if (boardArray[locations[0]] == mark && boardArray[locations[1]] == mark && boardArray[locations[2]] == mark) { return true }
+        }
+        return false
+    }
+    
 
     
 }  // end of FastBoard class defintiion
@@ -410,6 +420,27 @@ private func buildWinSites(omitCenter : Bool = true) -> [Int: [[Int]]] {
     }
     
     return siteDictionary
+}
+
+func buildMiniCornerGaps() -> [Int: [[Int]]] {
+    var result = [Int: [[Int]]]()
+    for index in 0...63 {
+        var arrayForIndex = [[Int]]()
+        //  **
+        //  *
+        if (index > 7 && index % 8 > 0) { arrayForIndex.append([index - 9, index - 8, index - 1])}
+        //  **
+        //   *
+        if (index > 7 && index % 8 < 7) { arrayForIndex.append([index - 8, index - 7, index + 1])}
+        //  *
+        //  **
+        if (index < 56 && index % 8 > 0) { arrayForIndex.append([index - 1, index + 7, index + 8])}
+        //   *
+        //  **
+        if (index < 56 && index % 8 < 7) { arrayForIndex.append([index + 1, index + 8, index + 9])}
+        result[index] = arrayForIndex
+    }
+    return result
 }
 
 private func buildAdjacencySites() -> [[Int]] {

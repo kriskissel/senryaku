@@ -89,9 +89,13 @@ class MiniMaxAI {
             return winningBoard
         }
         
-        if (board.usedLocations[1]!.count + board.usedLocations[2]!.count <= 2) {
+        let totalUsedLocations = board.usedLocations[1]!.count + board.usedLocations[2]!.count
+        
+        if (totalUsedLocations <= 2) {
             return randomizeOpening(board)!
         }
+        
+        
         
         let searchResult = minimaxSearch(board, ply: ply, humanSimulation: false).1
         var numberOfHumanProtoCornersInSearchResult = 0
@@ -104,6 +108,17 @@ class MiniMaxAI {
                 numberOfHumanProtoCornersInSearchResult += searchResult.countProtoCornersThroughTile(r, column: c , mark: humanMark)
             }
         }
+        
+        if (numberOfHumanProtoCornersInBoard == 0){
+            if (totalUsedLocations <= 6){
+                print("totalUsedLocations at most 6")
+                if let miniCornerBlockingMove = blockMiniCorner(board, alternateBoard: searchResult){
+                    print("move found to block mini corner")
+                    return miniCornerBlockingMove
+                }
+            }
+        }
+        
         if (numberOfHumanProtoCornersInBoard > numberOfHumanProtoCornersInSearchResult || numberOfHumanProtoCornersInSearchResult == 0) {
             return searchResult
         }
@@ -120,6 +135,17 @@ class MiniMaxAI {
                     if (newBoard.win == aiMark) {
                         return newBoard
                     }
+                }
+            }
+        }
+        return nil
+    }
+    
+    func blockMiniCorner(board: FastBoard, alternateBoard: FastBoard) -> FastBoard? {
+        for r in 0...7 {
+            for c in 0...7 {
+                if (board.checkForMiniCornerGapAtTile(r, column: c, mark: humanMark) && alternateBoard.checkForMiniCornerGapAtTile(r, column: c, mark: humanMark)) {
+                    return board.placePiece(r, column: c , mark: aiMark)
                 }
             }
         }
