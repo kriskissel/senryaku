@@ -780,6 +780,7 @@ class GameScene: SKScene {
     }
     
     func resetGame(){
+        boardHistory = [FastBoard]()
         currentGameBoard = FastBoard()
         currentViewedBoard = FastBoard()
         applyCurrentGameBoard()
