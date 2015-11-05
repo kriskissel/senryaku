@@ -74,28 +74,6 @@ class GameViewController: UIViewController {
             }
     }
 
-    /*
-    override func shouldAutorotate() -> Bool {
-        return false // changed from default of true
-    }
-    */
-
-    /*
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        /*
-        // default configuration
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return UIInterfaceOrientationMask.AllButUpsideDown
-        } else {
-            return UIInterfaceOrientationMask.All
-        }
-        */
-        // but I don't want autorotation:
-        return UIInterfaceOrientationMask.Portrait
-        
-    }
-    */
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.

@@ -50,6 +50,11 @@ class MainMenuViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidAppear(animated: Bool) {
+        print("view did appear, segueing to tutorial")
+        performSegueWithIdentifier("showTutorial", sender: self)
+    }
+    
 
     /*
     // MARK: - Navigation

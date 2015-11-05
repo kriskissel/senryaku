@@ -18,6 +18,9 @@
 		C0B418811BE13F72005D99E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0B418801BE13F72005D99E9 /* Assets.xcassets */; };
 		C0B418841BE13F72005D99E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0B418821BE13F72005D99E9 /* LaunchScreen.storyboard */; };
 		C0B4188C1BE14030005D99E9 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B4188B1BE14030005D99E9 /* MainMenuViewController.swift */; };
+		C0C7EBFA1BEAFABE00F815A9 /* TutotrialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C7EBF91BEAFABE00F815A9 /* TutotrialViewController.swift */; };
+		C0C7EBFC1BEAFF1C00F815A9 /* TutorialScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C7EBFB1BEAFF1C00F815A9 /* TutorialScene.swift */; };
+		C0C7EBFE1BEAFFD100F815A9 /* TutorialScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = C0C7EBFD1BEAFFD100F815A9 /* TutorialScene.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,9 @@
 		C0B418831BE13F72005D99E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C0B418851BE13F72005D99E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B4188B1BE14030005D99E9 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
+		C0C7EBF91BEAFABE00F815A9 /* TutotrialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutotrialViewController.swift; sourceTree = "<group>"; };
+		C0C7EBFB1BEAFF1C00F815A9 /* TutorialScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialScene.swift; sourceTree = "<group>"; };
+		C0C7EBFD1BEAFFD100F815A9 /* TutorialScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TutorialScene.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,11 +77,14 @@
 				C0B4188B1BE14030005D99E9 /* MainMenuViewController.swift */,
 				C0B418801BE13F72005D99E9 /* Assets.xcassets */,
 				C0977EDE1BE54B5D00270707 /* GameScene.swift */,
+				C0C7EBFB1BEAFF1C00F815A9 /* TutorialScene.swift */,
 				C0977EE41BE54BB100270707 /* FastBoard.swift */,
 				C0B418821BE13F72005D99E9 /* LaunchScreen.storyboard */,
 				C0977EE61BE54BC900270707 /* MinMaxAI.swift */,
 				C0977EE01BE54B6700270707 /* GameViewController.swift */,
+				C0C7EBF91BEAFABE00F815A9 /* TutotrialViewController.swift */,
 				C0977EE21BE54B7D00270707 /* GameScene.sks */,
+				C0C7EBFD1BEAFFD100F815A9 /* TutorialScene.sks */,
 				C067C9041BE5544D00B2CAA1 /* clink.wav */,
 				C0B418851BE13F72005D99E9 /* Info.plist */,
 			);
@@ -142,6 +151,7 @@
 			files = (
 				C0977EE31BE54B7D00270707 /* GameScene.sks in Resources */,
 				C0B418841BE13F72005D99E9 /* LaunchScreen.storyboard in Resources */,
+				C0C7EBFE1BEAFFD100F815A9 /* TutorialScene.sks in Resources */,
 				C067C9051BE5544D00B2CAA1 /* clink.wav in Resources */,
 				C0B418811BE13F72005D99E9 /* Assets.xcassets in Resources */,
 				C0B4187F1BE13F72005D99E9 /* Main.storyboard in Resources */,
@@ -155,11 +165,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0C7EBFC1BEAFF1C00F815A9 /* TutorialScene.swift in Sources */,
 				C0977EE11BE54B6700270707 /* GameViewController.swift in Sources */,
 				C0977EDF1BE54B5D00270707 /* GameScene.swift in Sources */,
 				C0B4188C1BE14030005D99E9 /* MainMenuViewController.swift in Sources */,
 				C0977EE71BE54BC900270707 /* MinMaxAI.swift in Sources */,
 				C0977EE51BE54BB100270707 /* FastBoard.swift in Sources */,
+				C0C7EBFA1BEAFABE00F815A9 /* TutotrialViewController.swift in Sources */,
 				C0B4187A1BE13F72005D99E9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
