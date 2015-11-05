@@ -16,12 +16,12 @@ class TutorialScene: GameScene {
         /* Setup your scene here */
         self.scaleMode = .ResizeFill
         addWallpaper()
+        drawBoard()
+        drawButtonsAndStatusLabel()
+        recenterBoard()
         self.childNodeWithName("wallpaper")?.alpha = 0
         self.childNodeWithName("gameTitleLabel")?.alpha = 0
         self.childNodeWithName("statusLabel")?.alpha = 0
-        drawBoard()
-        recenterBoard()
-        drawButtonsAndStatusLabel()
         let b0 = FastBoard()
         let b1 = b0.placePiece(3, column: 2, mark: 1)
         let b2 = b1.placePiece(5, column: 2, mark: 1)
@@ -99,7 +99,7 @@ class TutorialScene: GameScene {
                     }
                     
                 default:
-                    if (nameOfSpriteTouched == "" || nameOfSpriteTouched == "wallpaper") {break}
+                    if (nameOfSpriteTouched == "" || nameOfSpriteTouched == "wallpaper" || nameOfSpriteTouched == "gameTitleLabel" || nameOfSpriteTouched == "statusLabel") {break}
                     // might need to redo this with a switch instead of if-else
                     let touchedSquareCoordinates = getSquareCoordinatesFromSquareName(placeTouched.name!)
                     let row = touchedSquareCoordinates.1

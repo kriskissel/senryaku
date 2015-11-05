@@ -379,6 +379,12 @@ class GameScene: SKScene {
             if let nameOfSpriteTouched = placeTouched.name{
                 switch nameOfSpriteTouched {
                     
+                case "gameTitleLabel":
+                    break
+                    
+                case "statusLabal":
+                    break
+                    
                     
                 case "backButton":
                     if (gameState == GameState.GameOver){
@@ -441,7 +447,7 @@ class GameScene: SKScene {
                     }
                     
                 default:
-                    if (nameOfSpriteTouched == "" || nameOfSpriteTouched == "wallpaper") {break}
+                    if (nameOfSpriteTouched == "" || nameOfSpriteTouched == "wallpaper" || nameOfSpriteTouched == "gameTitleLabel" || nameOfSpriteTouched == "statusLabel") {break}
                     // might need to redo this with a switch instead of if-else
                     let touchedSquareCoordinates = getSquareCoordinatesFromSquareName(placeTouched.name!)
                     let row = touchedSquareCoordinates.1
