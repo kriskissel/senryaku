@@ -34,7 +34,7 @@ class TutorialScene: GameScene {
         addWallpaper()
         drawBoard()
         drawButtonsAndStatusLabel()
-        recenterBoard()
+        //recenterBoard()
         drawMessageLines()
         recenterMessageLines()
         self.childNodeWithName("wallpaper")?.alpha = 0
@@ -69,7 +69,17 @@ class TutorialScene: GameScene {
         self.addChild(messageLine1!)
         self.addChild(messageLine2!)
         self.addChild(messageLine3!)
+        
+        let endButton = SKSpriteNode(imageNamed: "Check Button.png")
+        endButton.size = (self.childNodeWithName("okayMoveButton") as! SKSpriteNode).size
+        endButton.position = CGPointMake(0,0)
+        endButton.name = "endButton"
+        endButton.zPosition = -11
+        self.addChild(endButton)
+        endButton.hidden = true
     }
+    
+
     
     override func recenterBoard() {
         recenterBoardInner()
@@ -110,6 +120,7 @@ class TutorialScene: GameScene {
         messageLine1?.position = CGPointMake(availableWidth / 2, messageLine1HorizontalPosition)
         messageLine2?.position = CGPointMake(availableWidth / 2, messageLine2HorizontalPosition)
         messageLine3?.position = CGPointMake(availableWidth / 2, messageLine3HorizontalPosition)
+        self.childNodeWithName("endButton")!.position = CGPointMake(availableWidth / 2, viewHeight - 0.8 * availableHeight)
     }
     
     override func displayGameState() {
@@ -192,8 +203,8 @@ class TutorialScene: GameScene {
             self.addPieceToBoardAnimated("\(location.1)\(location.0)", player: .player1)
         }
         highlightTiles(victoryLocations)
-        self.childNodeWithName("okayMoveButton")?.hidden = false
-        self.childNodeWithName("okayMoveButton")?.zPosition = 10
+        self.childNodeWithName("endButton")?.hidden = false
+        self.childNodeWithName("endButton")?.zPosition = 10
     }
     
     func saveFinishedTutorialToDefaults() {
@@ -214,6 +225,16 @@ class TutorialScene: GameScene {
                     
                 case "backButton", "playAgainButton", "wallpaper", "gameTitleLabel", "statusLabel", "player2", "", "messageLine1", "messageLine2", "messageLine3":
                     break
+                    
+                case "endButton":
+                    switch tutorialState {
+                    case TutorialState.explainingGameGoal:
+                        saveFinishedTutorialToDefaults()
+                        pressedBackButton()
+                    default:
+                        break
+                    }
+                    
                     
                 case "okayMoveButton":
                     switch tutorialState {
