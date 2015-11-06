@@ -140,6 +140,10 @@ class GameScene: SKScene {
     }
     
     func recenterBoard() {
+        recenterBoardInner()
+    }
+    
+    func recenterBoardInner() {
         // recalculate reference sizes
         let viewHeight = self.view!.bounds.height
         let viewWidth = self.view!.bounds.width

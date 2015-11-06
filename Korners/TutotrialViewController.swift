@@ -12,6 +12,13 @@ import SpriteKit
 class TutotrialViewController: GameViewController {
 
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if let scene = gameScene {
+            scene.layoutChanged = true
+        }
+    }
+    
     // need to modify this, cancel call to super?
     override func viewDidLoad() {
         //super.viewDidLoad()

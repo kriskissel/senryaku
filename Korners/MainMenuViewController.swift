@@ -52,7 +52,11 @@ class MainMenuViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         print("view did appear, segueing to tutorial")
-        performSegueWithIdentifier("showTutorial", sender: self)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let completedTutorial = defaults.boolForKey("FinishedTutorial")
+        if !completedTutorial {
+            performSegueWithIdentifier("showTutorial", sender: self)
+        }
     }
     
 

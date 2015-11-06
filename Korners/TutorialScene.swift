@@ -17,12 +17,16 @@ class TutorialScene: GameScene {
         }
         }
     
-    let message1 = "Touch any Square"
-    let message2 = "Accept or Cancel"
-    let message3 = "Touch One Of Your Pieces"
-    let message4 = "Select a Jump Target"
-    let message5 = "Accept or Cancel"
-    let message6 = "Goal:"
+    var messageLine1: SKLabelNode?
+    var messageLine2: SKLabelNode?
+    var messageLine3: SKLabelNode?
+    
+    let message1 = ["Touch any", "empty square", ""]
+    let message2 = ["Accept or Cancel", "", ""]
+    let message3 = ["Touch one of your", "pieces to try to jump", "over one of mine"]
+    let message4 = ["Select one of the", "highlighted tiles to", "jump onto it"]
+    let message5 = ["Accept or Cancel", "", ""]
+    let message6 = ["You will win if you", "make one of these", "shapes before I do"]
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -31,22 +35,85 @@ class TutorialScene: GameScene {
         drawBoard()
         drawButtonsAndStatusLabel()
         recenterBoard()
+        drawMessageLines()
+        recenterMessageLines()
         self.childNodeWithName("wallpaper")?.alpha = 0
         self.childNodeWithName("gameTitleLabel")?.alpha = 0
-        currentPlayerLabel.text = message1
-        currentPlayerLabel.color = UIColor.blueColor()
+        currentPlayerLabel.alpha = 0
         let b0 = FastBoard()
-        let b1 = b0.placePiece(3, column: 2, mark: 1)
-        let b2 = b1.placePiece(5, column: 2, mark: 1)
-        let b3 = b2.placePiece(2, column: 1, mark: 2)
-        let b4 = b3.placePiece(4, column: 3, mark: 2)
+        let b1 = b0.placePiece(3, column: 4, mark: 1)
+        let b2 = b1.placePiece(5, column: 5, mark: 1)
+        let b3 = b2.placePiece(2, column: 3, mark: 2)
+        let b4 = b3.placePiece(4, column: 5, mark: 2)
         currentGameBoard = b4
         applyCurrentGameBoard()
         currentViewedBoard = currentGameBoard
     }
     
+    func drawMessageLines(){
+        messageLine1 = SKLabelNode(fontNamed: "Arial")
+        messageLine2 = SKLabelNode(fontNamed: "Arial")
+        messageLine3 = SKLabelNode(fontNamed: "Arial")
+        messageLine1?.name = "messageLine1"
+        messageLine2?.name = "messageLine2"
+        messageLine3?.name = "messageLine3"
+        messageLine1?.fontColor = UIColor.blueColor()
+        messageLine2?.fontColor = UIColor.blueColor()
+        messageLine3?.fontColor = UIColor.blueColor()
+        messageLine1?.position = CGPointMake(0, 0)
+        messageLine2?.position = CGPointMake(100, 100)
+        messageLine3?.position = CGPointMake(200, 200)
+        messageLine1?.text = message1[0]
+        messageLine2?.text = message1[1]
+        messageLine3?.text = message1[2]
+        self.addChild(messageLine1!)
+        self.addChild(messageLine2!)
+        self.addChild(messageLine3!)
+    }
+    
+    override func recenterBoard() {
+        recenterBoardInner()
+        recenterMessageLines()
+    }
+    
+    func recenterMessageLines() {
+        // recalculate reference sizes
+        let viewHeight = self.view!.bounds.height
+        let viewWidth = self.view!.bounds.width
+        let squareSize:CGFloat = (min(viewHeight,viewWidth) - (min(viewHeight, viewWidth) % 9) ) / 9
+        pieceSize = squareSize - 4
+        let availableWidth: CGFloat
+        let availableHeight: CGFloat
+        if (viewWidth < viewHeight / 2){
+            // split view
+            availableWidth = viewWidth
+            availableHeight = viewHeight - 8.5 * squareSize
+        }
+            
+        else if (viewWidth < viewHeight){
+            // portrait
+            availableWidth = viewWidth
+            availableHeight = viewHeight - 8.5 * squareSize
+        }
+        else {
+            // landscape
+            availableWidth = viewWidth - 8.5 * squareSize
+            availableHeight = viewHeight
+        }
+        let fontSize = min(0.2 * availableHeight, 0.1 * availableWidth)
+        let messageLine1HorizontalPosition = viewHeight - 0.2 * availableHeight
+        let messageLine2HorizontalPosition = viewHeight - 0.4 * availableHeight
+        let messageLine3HorizontalPosition = viewHeight - 0.6 * availableHeight
+        messageLine1?.fontSize = fontSize
+        messageLine2?.fontSize = fontSize
+        messageLine3?.fontSize = fontSize
+        messageLine1?.position = CGPointMake(availableWidth / 2, messageLine1HorizontalPosition)
+        messageLine2?.position = CGPointMake(availableWidth / 2, messageLine2HorizontalPosition)
+        messageLine3?.position = CGPointMake(availableWidth / 2, messageLine3HorizontalPosition)
+    }
+    
     override func displayGameState() {
-        let message: String
+        let message: [String]
         switch tutorialState {
         case TutorialState.waitingToPlaceFirstPiece:
             message = message1
@@ -61,17 +128,9 @@ class TutorialScene: GameScene {
         case TutorialState.explainingGameGoal:
             message = message6
         }
-        currentPlayerLabel.text = message
-        
-        if (tutorialState == TutorialState.waitingToPlaceFirstPiece) {
-            currentPlayerLabel.text = message1   // Change this to ASSET
-            currentPlayerLabel.fontColor = UIColor.blueColor()
-            //print(ai.ratePosition(currentGameBoard))
-        }
-        if (tutorialState == TutorialState.waitingToCommitFirstPiece) {
-            currentPlayerLabel.text = message2 // Change this to ASSET
-            currentPlayerLabel.fontColor = UIColor.blueColor()
-        }
+        messageLine1!.text = message[0]
+        messageLine2!.text = message[1]
+        messageLine3!.text = message[2]
     }
     
     override func submitCurrentViewAsMove() {
@@ -88,17 +147,58 @@ class TutorialScene: GameScene {
     
     func placeBlackPieceForTutorial(){
         let selectedRow: Int
-        let selectedColumn = 2
-        if (currentGameBoard.getValue(2, column: 2) == 1){
+        let selectedColumn: Int
+        if (currentGameBoard.getValue(3, column: 5) == 1){
             selectedRow = 6
+            selectedColumn = 4
         }
-        else{
+        else if (currentGameBoard.getValue(1, column: 2) == 1){
+            selectedRow = 1
+            selectedColumn = 1
+        }
+        else if (currentGameBoard.getValue(0, column: 7) == 1){
+            selectedRow = 1
+            selectedColumn = 7
+        }
+        else if (currentGameBoard.getValue(5, column: 6) == 1){
+            selectedRow = 6
+            selectedColumn = 6
+        }
+        else if (currentGameBoard.getValue(1, column: 7) == 1){
             selectedRow = 2
+            selectedColumn = 7
+        }
+        else {
+            selectedRow = 0
+            selectedColumn = 7
         }
         self.addPieceToBoardAnimated("\(selectedColumn)\(selectedRow)", player: .player2)
         self.currentGameBoard = currentGameBoard.placePiece(selectedRow, column: selectedColumn, mark: 2)
+        if (selectedRow == 6 && selectedColumn == 4){
+            self.addPieceToBoardAnimated("62", player: .player2)
+            self.currentGameBoard = currentGameBoard.placePiece(2, column: 6, mark: 2)
+        }
         self.currentViewedBoard = currentGameBoard
         
+    }
+    
+    func showVictoryConfigurations() {
+        currentGameBoard = FastBoard()
+        currentViewedBoard = currentGameBoard
+        applyCurrentGameBoard()
+        let victoryLocations = [(0,3),(1,3),(2,3),(2,2),(2,1),(1,7),(1,6),(1,5),(2,5),(3,5),
+                                (4,1),(5,1),(6,1),(6,2),(6,3),(5,5),(5,6),(5,7),(6,7),(7,7)]
+        for location in victoryLocations{
+            self.addPieceToBoardAnimated("\(location.1)\(location.0)", player: .player1)
+        }
+        highlightTiles(victoryLocations)
+        self.childNodeWithName("okayMoveButton")?.hidden = false
+        self.childNodeWithName("okayMoveButton")?.zPosition = 10
+    }
+    
+    func saveFinishedTutorialToDefaults() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(true, forKey: "FinishedTutorial")
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -112,7 +212,7 @@ class TutorialScene: GameScene {
             if let nameOfSpriteTouched = placeTouched.name{
                 switch nameOfSpriteTouched {
                     
-                case "backButton", "playAgainButton", "wallpaper", "gameTitleLabel", "statusLabel", "player2", "":
+                case "backButton", "playAgainButton", "wallpaper", "gameTitleLabel", "statusLabel", "player2", "", "messageLine1", "messageLine2", "messageLine3":
                     break
                     
                 case "okayMoveButton":
@@ -128,7 +228,11 @@ class TutorialScene: GameScene {
                         if (tutorialState == TutorialState.waitingToConfirmJump){
                             applyCurrentGameBoard()
                             tutorialState = TutorialState.explainingGameGoal
+                            showVictoryConfigurations()
                         }
+                    case TutorialState.explainingGameGoal:
+                        saveFinishedTutorialToDefaults()
+                        pressedBackButton()
                     default:
                         break
                     }
