@@ -12,6 +12,18 @@ import SpriteKit
 
 class TutorialScene: GameScene {
     
+    var tutorialState = TutorialState.waitingToPlaceFirstPiece{ didSet {
+        displayGameState()
+        }
+        }
+    
+    let message1 = "Touch any Square"
+    let message2 = "Accept or Cancel"
+    let message3 = "Touch One Of Your Pieces"
+    let message4 = "Select a Jump Target"
+    let message5 = "Accept or Cancel"
+    let message6 = "Goal:"
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         self.scaleMode = .ResizeFill
@@ -21,7 +33,8 @@ class TutorialScene: GameScene {
         recenterBoard()
         self.childNodeWithName("wallpaper")?.alpha = 0
         self.childNodeWithName("gameTitleLabel")?.alpha = 0
-        self.childNodeWithName("statusLabel")?.alpha = 0
+        currentPlayerLabel.text = message1
+        currentPlayerLabel.color = UIColor.blueColor()
         let b0 = FastBoard()
         let b1 = b0.placePiece(3, column: 2, mark: 1)
         let b2 = b1.placePiece(5, column: 2, mark: 1)
@@ -30,6 +43,62 @@ class TutorialScene: GameScene {
         currentGameBoard = b4
         applyCurrentGameBoard()
         currentViewedBoard = currentGameBoard
+    }
+    
+    override func displayGameState() {
+        let message: String
+        switch tutorialState {
+        case TutorialState.waitingToPlaceFirstPiece:
+            message = message1
+        case TutorialState.waitingToCommitFirstPiece:
+            message = message2
+        case TutorialState.waitingToSelectPieceForJump:
+            message = message3
+        case TutorialState.waitingToSelectTarget:
+            message = message4
+        case TutorialState.waitingToConfirmJump:
+            message = message5
+        case TutorialState.explainingGameGoal:
+            message = message6
+        }
+        currentPlayerLabel.text = message
+        
+        if (tutorialState == TutorialState.waitingToPlaceFirstPiece) {
+            currentPlayerLabel.text = message1   // Change this to ASSET
+            currentPlayerLabel.fontColor = UIColor.blueColor()
+            //print(ai.ratePosition(currentGameBoard))
+        }
+        if (tutorialState == TutorialState.waitingToCommitFirstPiece) {
+            currentPlayerLabel.text = message2 // Change this to ASSET
+            currentPlayerLabel.fontColor = UIColor.blueColor()
+        }
+    }
+    
+    override func submitCurrentViewAsMove() {
+        if (tutorialState == TutorialState.waitingToCommitFirstPiece) {
+            currentGameBoard = currentViewedBoard // commits the current move
+        }
+        else {
+            currentGameBoard = currentGameBoard.jumpTiles(userJumpSequence)
+        }
+        legalJumpTargetTiles = []
+        activePiece = nil
+        
+    }
+    
+    func placeBlackPieceForTutorial(){
+        let selectedRow: Int
+        let selectedColumn = 2
+        if (currentGameBoard.getValue(2, column: 2) == 1){
+            selectedRow = 6
+        }
+        else{
+            selectedRow = 2
+        }
+        self.addPieceToBoardAnimated("\(selectedColumn)\(selectedRow)", player: .player2)
+        self.currentGameBoard = currentGameBoard.placePiece(selectedRow, column: selectedColumn, mark: 2)
+        self.currentViewedBoard = currentGameBoard
+        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -43,42 +112,31 @@ class TutorialScene: GameScene {
             if let nameOfSpriteTouched = placeTouched.name{
                 switch nameOfSpriteTouched {
                     
-                    
-                case "backButton":
-                    break
-                    
-                    
-                case "playAgainButton":
+                case "backButton", "playAgainButton", "wallpaper", "gameTitleLabel", "statusLabel", "player2", "":
                     break
                     
                 case "okayMoveButton":
-                    //print("pressed okayMoveButton")
-                    if (gameState == GameState.WaitingForJumpCommitOrExtendedJumpSequence || gameState == GameState.WaitingForPlacementCommit) {
+                    switch tutorialState {
+                    case TutorialState.waitingToCommitFirstPiece, TutorialState.waitingToConfirmJump:
                         hideCommitButtons()
-                        
-                        //clearPiecesFromView()
-                        
-                        if (gameState == GameState.WaitingForPlacementCommit) {
-                            activePiece?.alpha=1
-                        }
+                        activePiece?.alpha=1
                         submitCurrentViewAsMove()
-                        //checkWhetherCurrentPlayerHasWon()  // redundant?
-                        
-                        if (gameState == GameState.WaitingForJumpCommitOrExtendedJumpSequence) {
+                        if (tutorialState == TutorialState.waitingToCommitFirstPiece){
+                            tutorialState = TutorialState.waitingToSelectPieceForJump
+                            placeBlackPieceForTutorial()
+                        }
+                        if (tutorialState == TutorialState.waitingToConfirmJump){
                             applyCurrentGameBoard()
+                            tutorialState = TutorialState.explainingGameGoal
                         }
-                        legalJumpTargetTiles = []
-                        activePiece = nil
-                        if (gameState != GameState.GameOver) {
-                            switchUser()
-                            gameState = GameState.WaitingForAI
-                            submitMoveToAI(currentGameBoard)
-                        }
+                    default:
+                        break
                     }
+
                     
                 case "cancelMoveButton":
-                    //print("pressed cancelMoveButton")
-                    if (gameState == GameState.WaitingForJumpCommitOrExtendedJumpSequence || gameState == GameState.WaitingForPlacementCommit || gameState==GameState.WaitingForJumpTargetTile) {
+                    switch tutorialState{
+                    case TutorialState.waitingToCommitFirstPiece, TutorialState.waitingToSelectTarget, TutorialState.waitingToConfirmJump:
                         hideCommitButtons()
                         clearPiecesFromView()
                         applyCurrentGameBoard()
@@ -90,32 +148,34 @@ class TutorialScene: GameScene {
                         legalJumpTargetTiles = []
                         activePiece = nil
                         userJumpSequence = []
+                        if (tutorialState == TutorialState.waitingToCommitFirstPiece){
+                            tutorialState = TutorialState.waitingToPlaceFirstPiece
+                        }
+                        else {
+                            tutorialState = TutorialState.waitingToSelectPieceForJump
+                        }
+                        
+                    default:
+                        break
                     }
-                    
-                case "player1", "player2":
-                    if (gameState == GameState.ReadyForPlayerMove) {
+
+                case "player1":
+                    switch tutorialState {
+                    case TutorialState.waitingToSelectPieceForJump:
                         startJump(placeTouched)
                         activePiece = placeTouched
+                        tutorialState = TutorialState.waitingToSelectTarget
+                    default:
+                        break
                     }
+
                     
                 default:
-                    if (nameOfSpriteTouched == "" || nameOfSpriteTouched == "wallpaper" || nameOfSpriteTouched == "gameTitleLabel" || nameOfSpriteTouched == "statusLabel") {break}
-                    // might need to redo this with a switch instead of if-else
-                    let touchedSquareCoordinates = getSquareCoordinatesFromSquareName(placeTouched.name!)
-                    let row = touchedSquareCoordinates.1
-                    let col = touchedSquareCoordinates.0
-                    // note that touchedSquareCoorindates has the form (column, row)
-                    if (gameState == GameState.WaitingForJumpTargetTile || gameState == GameState.WaitingForJumpCommitOrExtendedJumpSequence) {
-                        let startingCoordinates = getSquareCoordinatesFromSquareName(activePiece!.parent!.name!)
-                        let startingRow = startingCoordinates.1
-                        let startingColumn = startingCoordinates.0
-                        if  (currentViewedBoard.legalToJump(startingRow, startingColumn: startingColumn, endingRow: row, endingColumn: col, mark: playerNumber(currentPlayer))){
-                            userJumpSequence.append((row, col))
-                            displayJumpResultAnimated(row, targetColumn: col) // this could break!!!
-                        }
-                    }
-                    else if (gameState == GameState.ReadyForPlayerMove) {
-                        // player can place a piece or use a piece to jump
+                    switch tutorialState {
+                    case TutorialState.waitingToPlaceFirstPiece:
+                        let touchedSquareCoordinates = getSquareCoordinatesFromSquareName(placeTouched.name!)
+                        let row = touchedSquareCoordinates.1
+                        let col = touchedSquareCoordinates.0
                         if currentViewedBoard.isEmptyTile(row, column: col) {
                             // player is adding a piece to the board -- need to add a commit stage here.
                             addPieceToBoardAnimated(placeTouched.name!, player: currentPlayer)
@@ -126,18 +186,23 @@ class TutorialScene: GameScene {
                             
                             previousGameBoard = currentViewedBoard
                             currentViewedBoard = currentViewedBoard.placePiece(row, column: col, mark: playerNumber(currentPlayer))
+                            tutorialState = TutorialState.waitingToCommitFirstPiece
                         }
-                        else {
-                            if let touchedPiece = placeTouched.childNodeWithName(playerName(currentPlayer)) {
-                                // player touched tile containing own piece
-                                // the next two lines are a repetition of code above, maybe I should extract them into another method?
-                                startJump(touchedPiece)
-                                activePiece = touchedPiece
-                            }
-                            else {
-                                // player touched a tile containing opponent's piece
-                            }
+                    case TutorialState.waitingToSelectTarget:
+                        let touchedSquareCoordinates = getSquareCoordinatesFromSquareName(placeTouched.name!)
+                        let row = touchedSquareCoordinates.1
+                        let col = touchedSquareCoordinates.0
+                        let startingCoordinates = getSquareCoordinatesFromSquareName(activePiece!.parent!.name!)
+                        let startingRow = startingCoordinates.1
+                        let startingColumn = startingCoordinates.0
+                        if  (currentViewedBoard.legalToJump(startingRow, startingColumn: startingColumn, endingRow: row, endingColumn: col, mark: playerNumber(currentPlayer))){
+                            userJumpSequence.append((row, col))
+                            displayJumpResultAnimated(row, targetColumn: col) // this could break!!!
                         }
+                        tutorialState = TutorialState.waitingToConfirmJump
+                    default:
+                        break
+
                     }
                 }
             }
@@ -151,6 +216,7 @@ class TutorialScene: GameScene {
         case waitingToCommitFirstPiece
         case waitingToSelectPieceForJump
         case waitingToSelectTarget
+        case waitingToConfirmJump
         case explainingGameGoal
     }
 
