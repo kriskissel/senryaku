@@ -95,7 +95,9 @@ class MiniMaxAI {
             return randomizeOpening(board)!
         }
         
-        
+        if let interruptThreeInARow = findThreeInARow(board) {
+            return interruptThreeInARow
+        }
         
         let searchResult = minimaxSearch(board, ply: ply, humanSimulation: false).1
         var numberOfHumanProtoCornersInSearchResult = 0
@@ -189,6 +191,36 @@ class MiniMaxAI {
             }
             let choice = Int(arc4random_uniform(UInt32(possiblePlacementLocations.count)))
             return board.placePiece(possiblePlacementLocations[choice].0, column: possiblePlacementLocations[choice].1, mark: aiMark)
+        }
+        return nil
+    }
+    
+    func findThreeInARow(board: FastBoard) -> FastBoard? {
+        if (board.usedLocations[humanMark]!.count == 3 && board.adjacencies[humanMark] == 2) {
+            var rowTotal = 0
+            var columnTotal = 0
+            for row in 0...7 {
+                for column in 0...7 {
+                    if (board.getValue(row, column: column) == humanMark){
+                        rowTotal += row
+                        columnTotal += column 
+                    }
+                }
+            }
+            let midRow = rowTotal / 3
+            let midColumn = columnTotal / 3
+            if (midRow > 0 && board.getValue(midRow - 1, column: midColumn) == 0) {
+                return board.placePiece(midRow - 1, column: midColumn, mark: aiMark)
+            }
+            if (midRow < 7 && board.getValue(midRow + 1, column: midColumn) == 0) {
+                return board.placePiece(midRow + 1, column: midColumn, mark: aiMark)
+            }
+            if (midColumn > 0 && board.getValue(midRow, column: midColumn - 1) == 0) {
+                return board.placePiece(midRow, column: midColumn - 1, mark: aiMark)
+            }
+            if (midColumn < 7 && board.getValue(midRow, column: midColumn + 1) == 0) {
+                return board.placePiece(midRow, column: midColumn + 1, mark: aiMark)
+            }
         }
         return nil
     }
