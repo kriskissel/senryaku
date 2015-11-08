@@ -289,7 +289,9 @@ class TutorialScene: GameScene {
                     case TutorialState.waitingToSelectPieceForJump:
                         startJump(placeTouched)
                         activePiece = placeTouched
-                        tutorialState = TutorialState.waitingToSelectTarget
+                        if ( gameState == GameState.WaitingForJumpTargetTile){
+                            tutorialState = TutorialState.waitingToSelectTarget
+                        }
                     default:
                         break
                     }
