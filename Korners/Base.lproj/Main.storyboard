@@ -145,6 +145,6 @@
     </scenes>
     <resources>
         <image name="BackgroundImage" width="1155" height="578"/>
-        <image name="TitleText" width="1613" height="267"/>
+        <image name="TitleText" width="1567" height="272"/>
     </resources>
 </document>
