@@ -38,6 +38,7 @@ class FastBoard : CustomStringConvertible {
     var generatingMoveIndices: [Int]
     var usedLocations: [Int: Set<Int>]
     var adjacencies: [Int]
+    var protoCorners: [Int]
     var win: Int // records the mark of whoever has won
     var withinOneOfPreviousPlacement: Set<Int>
     var winLocation: [(row: Int, column: Int)]?
@@ -51,11 +52,13 @@ class FastBoard : CustomStringConvertible {
         }
         //result += "used locations for player 1: \(usedLocations[1]!) \n"
         //result += "used locations for player 2; \(usedLocations[2]!) \n"
-        result += "adjacencies for player 1: \(adjacencies[1]) \n"
-        result += "adjacencies for player 2: \(adjacencies[2]) \n"
-        result += "win: \(win) \n"
+        //result += "adjacencies for player 1: \(adjacencies[1]) \n"
+        //result += "adjacencies for player 2: \(adjacencies[2]) \n"
+        //result += "win: \(win) \n"
         //result += "win location: \n"
         //result += String(winLocation)
+        result += "protoCorners for player 1: \(protoCorners[1])\n"
+        result += "protoCorners for player 2: \(protoCorners[2])\n"
         
         return result
     }
@@ -69,6 +72,7 @@ class FastBoard : CustomStringConvertible {
         usedLocations[1] = Set<Int>()
         usedLocations[2] = Set<Int>()
         adjacencies = [0,0,0]
+        protoCorners = [0,0,0]
         win = 0
         withinOneOfPreviousPlacement = Set<Int>()
         generatingMoveIndices = [Int]()
@@ -80,6 +84,7 @@ class FastBoard : CustomStringConvertible {
         self.usedLocations[1] = Set( Array( board.usedLocations[1]! ) )
         self.usedLocations[2] = Set( Array( board.usedLocations[2]! ) )
         self.adjacencies = Array( board.adjacencies )
+        self.protoCorners = Array ( board.protoCorners )
         self.win = 0 // we skip a lookup by assuming that winning boards will have no children
         self.withinOneOfPreviousPlacement = Set(board.withinOneOfPreviousPlacement)
         self.generatingMoveIndices = Array( board.generatingMoveIndices )
@@ -99,6 +104,10 @@ class FastBoard : CustomStringConvertible {
         let wpCheck = newBoard.checkForWinAndProtoCorners(index: index, mark: mark)
         newBoard.win = wpCheck.0
         // add calculations for protoCorners here
+        // add protocorners gained
+        newBoard.protoCorners[mark] += wpCheck.1
+        // subtract protoCorners removed from opponent
+        newBoard.protoCorners[3 - mark] -= self.countProtoCornersThroughTile(index, mark: 3 - mark)
         newBoard.generatingMoveIndices = [index]
         return newBoard
     }
@@ -155,8 +164,15 @@ class FastBoard : CustomStringConvertible {
             }
         }
         let wpCheck = newBoard.checkForWinAndProtoCorners(index: endingIndex, mark: mark)
+        //let wpCheckOldBoard = self.checkForWinAndProtoCorners(index: startingIndex, mark: mark)
         newBoard.win = wpCheck.0
         // add calculations for protoCornersHere
+        // update mark by adding protoCorners gained on the newBoard at the target tile and the jumped location
+        // subtracting protoCorners lost on the old board by abandinging the old position
+        newBoard.protoCorners[mark] += wpCheck.1 + newBoard.countProtoCornersThroughTile(jumpedIndex, mark: mark) - self.countProtoCornersThroughTile(startingIndex, mark: mark)
+        // update opponent mark by subtracting the protoCorners lost at the jumped tile and the protocorners lost at the target tile
+        // and adding the protoCorners gained at the abandoned location
+        newBoard.protoCorners[opponentMark] +=  newBoard.countProtoCornersThroughTile(startingIndex, mark: opponentMark) - self.countProtoCornersThroughTile(jumpedIndex, mark: opponentMark) - wpCheck.2
         newBoard.generatingMoveIndices = [startingIndex, endingIndex]
         return newBoard
     }
@@ -289,14 +305,18 @@ class FastBoard : CustomStringConvertible {
     
     // MARK: Board data maintenence utilities
     
-    func checkForWinAndProtoCorners(index index: Int, mark: Int) -> (Int,Int) {
+    func checkForWinAndProtoCorners(index index: Int, mark: Int) -> (Int,Int,Int) {
         // returns mark in the first component if the player merk has won, else returns 0
-        // return the number of protocorners through index corresponding to mark
+        // return the number of protocorners through index corresponding to mark in the second entry
+        // returns the opponent's protocorner count int he third entry
         // ASSUMES that the boardArray contains mark at index.
         var win = 0
         var protoCorners = 0
+        var adversaryProtoCorners = 0
+        let adversaryMark = 3 - mark
         let winValue = Int(pow( Double( 1 + mark ),4.0))
         let protoCornerValue = Int(pow(Double(1 + mark),3.0))
+        let adversaryProtoCornerValue = Int(pow(Double( 1 + adversaryMark ),3.0))
         for site in winSites[index]! {
             let product = (1+boardArray[site[0]]) * (1+boardArray[site[1]]) * (1+boardArray[site[2]]) * (1+boardArray[site[3]])
             if (product == winValue){
@@ -308,8 +328,13 @@ class FastBoard : CustomStringConvertible {
                 // protoCorner!
                 protoCorners += 1
             }
+            if (product == adversaryProtoCornerValue) {
+                // opponentProtoCorner
+                adversaryProtoCorners += 1
+            }
+            
         }
-        return (win, protoCorners)
+        return (win, protoCorners, adversaryProtoCorners)
     }
     
     func checkForWin(row row: Int, column: Int, mark: Int) -> Int {
@@ -317,10 +342,9 @@ class FastBoard : CustomStringConvertible {
         return x.0
     }
     
-    func countProtoCornersThroughTile(row: Int, column: Int, mark: Int) -> Int {
+    func countProtoCornersThroughTile(index: Int, mark: Int) -> Int {
         var count = 0
-        let arrayIndex = coordinatesToArrayIndex(row, column: column)
-        let sitesToCheck = protoCornerStes[arrayIndex]
+        let sitesToCheck = protoCornerStes[index]
         for s in sitesToCheck! {
             let strand = [boardArray[s[0]],boardArray[s[1]],boardArray[s[2]],boardArray[s[3]],boardArray[s[4]]]
             if (strand == [0,mark,mark,mark,mark]) { count += 1 }
@@ -330,6 +354,11 @@ class FastBoard : CustomStringConvertible {
             if (strand == [mark,mark,mark,mark,0]) { count += 1 }
         }
         return count
+    }
+    
+    func countProtoCornersThroughTile(row: Int, column: Int, mark: Int) -> Int {
+        let arrayIndex = coordinatesToArrayIndex(row, column: column)
+        return countProtoCornersThroughTile(arrayIndex, mark: mark)
     }
     
     func checkForMiniCornerGapAtTile(row: Int, column: Int, mark: Int) -> Bool {
