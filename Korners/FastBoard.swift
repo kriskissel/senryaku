@@ -96,7 +96,9 @@ class FastBoard : CustomStringConvertible {
             if (newBoard.boardArray[tile] == mark) { newBoard.adjacencies[mark] += 1 }
             else if (newBoard.boardArray[tile] == 0) { newBoard.withinOneOfPreviousPlacement.insert(tile) }
         }
-        newBoard.win = newBoard.checkForWin(index: index, mark: mark)
+        let wpCheck = newBoard.checkForWinAndProtoCorners(index: index, mark: mark)
+        newBoard.win = wpCheck.0
+        // add calculations for protoCorners here
         newBoard.generatingMoveIndices = [index]
         return newBoard
     }
@@ -152,7 +154,9 @@ class FastBoard : CustomStringConvertible {
                 //print("opponent lost adjacency at \(tile), adjacency count now \(newBoard.adjacencies[opponentMark])")
             }
         }
-        newBoard.win = newBoard.checkForWin(index: endingIndex, mark: mark)
+        let wpCheck = newBoard.checkForWinAndProtoCorners(index: endingIndex, mark: mark)
+        newBoard.win = wpCheck.0
+        // add calculations for protoCornersHere
         newBoard.generatingMoveIndices = [startingIndex, endingIndex]
         return newBoard
     }
@@ -285,24 +289,32 @@ class FastBoard : CustomStringConvertible {
     
     // MARK: Board data maintenence utilities
     
-    func checkForWin(index index: Int, mark: Int) -> Int {
-        //print("checking for win by player \(mark) at tile index \(index)")
+    func checkForWinAndProtoCorners(index index: Int, mark: Int) -> (Int,Int) {
+        // returns mark in the first component if the player merk has won, else returns 0
+        // return the number of protocorners through index corresponding to mark
+        // ASSUMES that the boardArray contains mark at index.
+        var win = 0
+        var protoCorners = 0
+        let winValue = Int(pow( Double( 1 + mark ),4.0))
+        let protoCornerValue = Int(pow(Double(1 + mark),3.0))
         for site in winSites[index]! {
-            //print("checking win site: \(site)")
-            //print([boardArray[site[0]],boardArray[site[1]], boardArray[site[2]], boardArray[site[3]]])
-            if ([boardArray[site[0]],boardArray[site[1]], boardArray[site[2]], boardArray[site[3]]] == [mark, mark, mark, mark]) {
-                //print("found a win")
+            let product = (1+boardArray[site[0]]) * (1+boardArray[site[1]]) * (1+boardArray[site[2]]) * (1+boardArray[site[3]])
+            if (product == winValue){
+                // win!
                 self.winLocation = [arrayIndexToCoordinates(site[0]), arrayIndexToCoordinates(site[1]), arrayIndexToCoordinates(site[2]), arrayIndexToCoordinates(site[3]), arrayIndexToCoordinates(index)]
-                //print("setting the winLocation to:")
-                //print(self.winLocation!)
-                return mark
+                win = mark
+            }
+            if (product == protoCornerValue) {
+                // protoCorner!
+                protoCorners += 1
             }
         }
-        return 0
+        return (win, protoCorners)
     }
     
     func checkForWin(row row: Int, column: Int, mark: Int) -> Int {
-        return checkForWin(index: 8 * row + column, mark: mark)
+        let x = checkForWinAndProtoCorners(index: 8 * row + column, mark: mark)
+        return x.0
     }
     
     func countProtoCornersThroughTile(row: Int, column: Int, mark: Int) -> Int {
