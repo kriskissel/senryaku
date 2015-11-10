@@ -14,12 +14,14 @@ class MiniMaxAI {
     
     let aiMark: Int
     let humanMark: Int
-    let tilesCoefficient: Float
-    let adjacenciesCoefficient: Float
+    let tilesCoefficient: Int
+    let adjacenciesCoefficient: Int
+    let protoCornersCoefficient: Int
     
     init(aiMark: Int) {
-        tilesCoefficient = Float(1)
-        adjacenciesCoefficient = Float(1)
+        tilesCoefficient = 1
+        adjacenciesCoefficient = 1
+        self.protoCornersCoefficient = 100
         //oneGapsCoefficient = 0 // used to be 3, now testing if we can do without
         //protoCornersCoefficient = 100
         self.aiMark = aiMark
@@ -33,9 +35,9 @@ class MiniMaxAI {
         //        let score = Float(board.numberOfUsedLocations[mark]! - board.numberOfUsedLocations[adversaryMark]!) * self.tilesCoefficient + Float(board.adjacencies[mark]! - board.adjacencies[adversaryMark]!) * self.adjacenciesCoefficient + Float(board.oneGaps[mark]! - board.oneGaps[adversaryMark]!) * self.oneGapsCoefficient + Float(board.protoCorners[mark]! - board.protoCorners[adversaryMark]!) * self.protoCornersCoefficient
         
         // without oneGaps or protoCorners
-        let score = Float(board.usedLocations[aiMark]!.count - board.usedLocations[humanMark]!.count) * self.tilesCoefficient + Float(board.adjacencies[aiMark] - board.adjacencies[humanMark]) * self.adjacenciesCoefficient
+        let score = (board.usedLocations[aiMark]!.count - board.usedLocations[humanMark]!.count) * self.tilesCoefficient + (board.adjacencies[aiMark] - board.adjacencies[humanMark]) * self.adjacenciesCoefficient + (board.protoCorners[aiMark] - board.protoCorners[humanMark]) * self.protoCornersCoefficient
         
-        return score
+        return Float( score )
     }
     
     func minimaxSearch(board: FastBoard, ply: Int, humanSimulation: Bool) -> (Float, FastBoard) {
