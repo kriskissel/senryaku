@@ -22,8 +22,14 @@ class MiniMaxAI {
         tilesCoefficient = 1
         adjacenciesCoefficient = 1
         self.protoCornersCoefficient = 100
-        //oneGapsCoefficient = 0 // used to be 3, now testing if we can do without
-        //protoCornersCoefficient = 100
+        self.aiMark = aiMark
+        self.humanMark = 3 - aiMark
+    }
+    
+    init(aiMark: Int, tilesCoeff: Int, adjacenciesCoeff: Int, protoCornersCoeff: Int){
+        tilesCoefficient = tilesCoeff
+        adjacenciesCoefficient = adjacenciesCoeff
+        protoCornersCoefficient = protoCornersCoeff
         self.aiMark = aiMark
         self.humanMark = 3 - aiMark
     }

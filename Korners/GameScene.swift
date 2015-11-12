@@ -44,7 +44,18 @@ class GameScene: SKScene {
         }
         }
     
-    var aiPly: Int!
+    // the 1 in the following line is temporary, it should be set when the gameLevel is set
+    var aiPly = 1 { didSet { ai = MiniMaxAI(aiMark: 2, tilesCoeff: scoringCoefficient.0,
+        adjacenciesCoeff: scoringCoefficient.1, protoCornersCoeff: scoringCoefficient.2) } }
+    
+    var scoringCoefficient: (Int, Int, Int)!
+    
+    var gameLevel: Int! { didSet {
+        print("setting game level to: \(gameLevel!)")
+        if (gameLevel == 0) { scoringCoefficient = (1,1,0); aiPly = 1; }
+        else {scoringCoefficient = (1,1,100); aiPly = gameLevel; }
+        }
+    }
     
     var squareSizeMultiplier = CGFloat(10) // used to determine the size of tiles for display on various devices, 10 is just a temporary placeholder
     var pieceSize = CGFloat(10) // used to determine the size of game pieces, 10 i sjust a temporary placeholder

@@ -24,7 +24,7 @@ class MainMenuViewController: UIViewController {
         super.prepareForSegue(segue, sender: sender)
         if (segue.identifier == "playGame"){
             let svc = segue.destinationViewController as! GameViewController
-            svc.valueToPass = levelSelectorSegmentedControl.selectedSegmentIndex + 1
+            svc.valueToPass = levelSelectorSegmentedControl.selectedSegmentIndex
         }
     }
 

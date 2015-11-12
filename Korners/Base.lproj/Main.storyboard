@@ -46,13 +46,14 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Dad-tY-VX1">
-                                <rect key="frame" x="211.5" y="286" width="176" height="29"/>
+                                <rect key="frame" x="182" y="286" width="235" height="29"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <segments>
                                     <segment title="Level 1"/>
                                     <segment title="Level 2"/>
                                     <segment title="Level 3"/>
+                                    <segment title="Level 4"/>
                                 </segments>
                             </segmentedControl>
                         </subviews>
