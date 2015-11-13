@@ -12,6 +12,7 @@ class MainMenuViewController: UIViewController {
     
     
     @IBOutlet weak var levelSelectorSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var playerSelectorSegmentedControl: UISegmentedControl!
     
     
     @IBAction func playNow(sender: UIButton) {
@@ -24,7 +25,7 @@ class MainMenuViewController: UIViewController {
         super.prepareForSegue(segue, sender: sender)
         if (segue.identifier == "playGame"){
             let svc = segue.destinationViewController as! GameViewController
-            svc.valueToPass = levelSelectorSegmentedControl.selectedSegmentIndex
+            svc.valueToPass = (levelSelectorSegmentedControl.selectedSegmentIndex, playerSelectorSegmentedControl.selectedSegmentIndex)
         }
     }
 

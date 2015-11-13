@@ -43,7 +43,7 @@ class TutotrialViewController: GameViewController {
             scene.viewController = self
             
             // The next line passes the difficulty level to the GameScene
-            scene.aiPly = valueToPass
+            scene.aiPly = valueToPass.0
             
             skView.presentScene(scene)
             

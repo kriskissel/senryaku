@@ -15,8 +15,8 @@ var player2Piece = "Corners Player 2 Piece - 1"
 
 
 
-var humanPlayer = 1 // change this to 2 if user elects to be player 2
-var aiPlayer: Int { get { return (3 - humanPlayer) }}
+//var humanPlayer = 1 // change this to 2 if user elects to be player 2
+//var aiPlayer: Int { get { return (3 - humanPlayer) }}
 
 var currentPlayer = Players.player1 // modify the initial value of this based on the value of humanPlayer
 var currentPlayerLabel: SKLabelNode!
@@ -33,6 +33,22 @@ var legalJumpTargetTiles = [(Int,Int)]() // used when a jump is in progresss to 
 
 class GameScene: SKScene {
     
+    var humanPlayer = 1 { didSet {
+        print("human is player \(humanPlayer)")
+        if (humanPlayer == 1) {
+            currentPlayer = Players.player1
+            player1Piece = "Corners Player 1 Piece - 1"
+            player2Piece = "Corners Player 2 Piece - 1"
+        }
+        if (humanPlayer == 2) {
+            currentPlayer = Players.player2
+            player1Piece = "Corners Player 2 Piece - 1"
+            player2Piece = "Corners Player 1 Piece - 1"
+        }
+        }}
+    var aiPlayer: Int { get { return (3 - humanPlayer) }}
+
+
     
     weak var viewController: UIViewController? // made this weak so that the gae scence and game view controller can be released from memory
     
@@ -98,6 +114,10 @@ class GameScene: SKScene {
         currentGameBoard = FastBoard()
         applyCurrentGameBoard()
         currentViewedBoard = currentGameBoard
+        if (humanPlayer == 2) {
+            gameState = GameState.WaitingForAI
+        }
+        submitMoveToAI(currentGameBoard)
     }
     
     func addWallpaper() {
@@ -411,7 +431,14 @@ class GameScene: SKScene {
                 case "playAgainButton":
                     if (gameState == GameState.GameOver) {
                         resetGame()
-                        gameState = GameState.ReadyForPlayerMove
+                        if (humanPlayer == 1) {
+                            gameState = GameState.ReadyForPlayerMove
+                        }
+                        else {
+                            gameState = GameState.WaitingForAI
+                            currentPlayer = Players.player2
+                            submitMoveToAI(currentGameBoard)
+                        }
                     }
                     
                 case "okayMoveButton":

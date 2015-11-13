@@ -29,7 +29,7 @@ extension SKNode {
 
 class GameViewController: UIViewController {
     
-    var valueToPass: Int!
+    var valueToPass: (Int, Int)!
     
     weak var gameScene: GameScene?
     
@@ -67,7 +67,8 @@ class GameViewController: UIViewController {
             scene.viewController = self
             
             // The next line passes the difficulty level to the GameScene
-            scene.gameLevel = valueToPass
+            scene.gameLevel = valueToPass.0
+            scene.humanPlayer = valueToPass.1 + 1
             
             skView.presentScene(scene)
             
