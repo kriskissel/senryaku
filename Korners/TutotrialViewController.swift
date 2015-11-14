@@ -43,7 +43,12 @@ class TutotrialViewController: GameViewController {
             scene.viewController = self
             
             // The next line passes the difficulty level to the GameScene
-            scene.aiPly = valueToPass.0
+            //scene.aiPly = valueToPass.0
+            // NO, this caused a crash!
+            // Something about the way TutorialScene inherits from GameScene and the order in which
+            // this initialize made an option unwrap as nil.
+            // But it's not necessary, anyway, because GameScene.aiPly has a default value that 
+            // works fine for the tutorial.
             
             skView.presentScene(scene)
             
