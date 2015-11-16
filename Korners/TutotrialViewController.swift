@@ -19,6 +19,16 @@ class TutotrialViewController: GameViewController {
         }
     }
     
+    // The following method is used to send information to Google Analytics showing how often
+    // the user sees the tutorial.
+    override func viewWillAppear(animated: Bool) {
+        var tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "Tutorial")
+        
+        var builder = GAIDictionaryBuilder.createScreenView()
+        tracker.send(builder.build() as [NSObject : AnyObject])
+    }
+    
     // need to modify this, cancel call to super?
     override func viewDidLoad() {
         //super.viewDidLoad()

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		365B133F570FD96D16301D80 /* Pods_Korners.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3EDD3C933C249C7EBE368E2 /* Pods_Korners.framework */; };
+		C043B2011BF951CD00B76F38 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C043B2001BF951CD00B76F38 /* GoogleService-Info.plist */; };
 		C067C9051BE5544D00B2CAA1 /* clink.wav in Resources */ = {isa = PBXBuildFile; fileRef = C067C9041BE5544D00B2CAA1 /* clink.wav */; };
 		C0977EDF1BE54B5D00270707 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0977EDE1BE54B5D00270707 /* GameScene.swift */; };
 		C0977EE11BE54B6700270707 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0977EE01BE54B6700270707 /* GameViewController.swift */; };
@@ -24,6 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		536EE8DDCB91BAD8F4420D8A /* Pods-Korners.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Korners.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Korners/Pods-Korners.debug.xcconfig"; sourceTree = "<group>"; };
+		7C4063F048F3E77A67271255 /* Pods-Korners.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Korners.release.xcconfig"; path = "Pods/Target Support Files/Pods-Korners/Pods-Korners.release.xcconfig"; sourceTree = "<group>"; };
+		C043B2001BF951CD00B76F38 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C043B2021BF9520900B76F38 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		C067C9041BE5544D00B2CAA1 /* clink.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = clink.wav; sourceTree = "<group>"; };
 		C0977EDE1BE54B5D00270707 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		C0977EE01BE54B6700270707 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -40,6 +46,7 @@
 		C0C7EBF91BEAFABE00F815A9 /* TutotrialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutotrialViewController.swift; sourceTree = "<group>"; };
 		C0C7EBFB1BEAFF1C00F815A9 /* TutorialScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialScene.swift; sourceTree = "<group>"; };
 		C0C7EBFD1BEAFFD100F815A9 /* TutorialScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TutorialScene.sks; sourceTree = "<group>"; };
+		E3EDD3C933C249C7EBE368E2 /* Pods_Korners.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Korners.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,17 +54,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				365B133F570FD96D16301D80 /* Pods_Korners.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5FE547EB4D1411EC376BAF35 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				536EE8DDCB91BAD8F4420D8A /* Pods-Korners.debug.xcconfig */,
+				7C4063F048F3E77A67271255 /* Pods-Korners.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		7D5DB7B1240A0A7E3B92C6F2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E3EDD3C933C249C7EBE368E2 /* Pods_Korners.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C0B4186D1BE13F72005D99E9 = {
 			isa = PBXGroup;
 			children = (
+				C043B2001BF951CD00B76F38 /* GoogleService-Info.plist */,
 				C0B418781BE13F72005D99E9 /* Korners */,
 				C0B418771BE13F72005D99E9 /* Products */,
+				5FE547EB4D1411EC376BAF35 /* Pods */,
+				7D5DB7B1240A0A7E3B92C6F2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -87,6 +115,7 @@
 				C0C7EBFD1BEAFFD100F815A9 /* TutorialScene.sks */,
 				C067C9041BE5544D00B2CAA1 /* clink.wav */,
 				C0B418851BE13F72005D99E9 /* Info.plist */,
+				C043B2021BF9520900B76F38 /* BridgingHeader.h */,
 			);
 			path = Korners;
 			sourceTree = "<group>";
@@ -98,9 +127,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C0B418881BE13F72005D99E9 /* Build configuration list for PBXNativeTarget "Korners" */;
 			buildPhases = (
+				C203AA96778BB601CFB738DC /* Check Pods Manifest.lock */,
 				C0B418721BE13F72005D99E9 /* Sources */,
 				C0B418731BE13F72005D99E9 /* Frameworks */,
 				C0B418741BE13F72005D99E9 /* Resources */,
+				290123B85A90E558263E4911 /* Embed Pods Frameworks */,
+				06512756DAFEB9829C9532B9 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -155,10 +187,59 @@
 				C067C9051BE5544D00B2CAA1 /* clink.wav in Resources */,
 				C0B418811BE13F72005D99E9 /* Assets.xcassets in Resources */,
 				C0B4187F1BE13F72005D99E9 /* Main.storyboard in Resources */,
+				C043B2011BF951CD00B76F38 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		06512756DAFEB9829C9532B9 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Korners/Pods-Korners-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		290123B85A90E558263E4911 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Korners/Pods-Korners-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C203AA96778BB601CFB738DC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C0B418721BE13F72005D99E9 /* Sources */ = {
@@ -283,6 +364,7 @@
 		};
 		C0B418891BE13F72005D99E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 536EE8DDCB91BAD8F4420D8A /* Pods-Korners.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -291,11 +373,13 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kriskissel.senryaku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Korners/BridgingHeader.h;
 			};
 			name = Debug;
 		};
 		C0B4188A1BE13F72005D99E9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C4063F048F3E77A67271255 /* Pods-Korners.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -304,6 +388,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kriskissel.senryaku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Korners/BridgingHeader.h;
 			};
 			name = Release;
 		};

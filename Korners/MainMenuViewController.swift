@@ -28,6 +28,16 @@ class MainMenuViewController: UIViewController {
             svc.valueToPass = (levelSelectorSegmentedControl.selectedSegmentIndex, playerSelectorSegmentedControl.selectedSegmentIndex)
         }
     }
+    
+    // The following method is used to send information to Google Analytics showin ghow often
+    // the user sees the main menu.
+    override func viewWillAppear(animated: Bool) {
+        var tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "Main Menu")
+        
+        var builder = GAIDictionaryBuilder.createScreenView()
+        tracker.send(builder.build() as [NSObject : AnyObject])
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

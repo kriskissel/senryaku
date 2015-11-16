@@ -40,6 +40,16 @@ class GameViewController: UIViewController {
             scene.layoutChanged = true
         }
     }
+    
+    // The following method is used to send information to Google Analytics showing how often
+    // the user sees the game screen.
+    override func viewWillAppear(animated: Bool) {
+        var tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "Game Level \(valueToPass!.0) as Player \(valueToPass!.1 + 1)")
+        
+        var builder = GAIDictionaryBuilder.createScreenView()
+        tracker.send(builder.build() as [NSObject : AnyObject])
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

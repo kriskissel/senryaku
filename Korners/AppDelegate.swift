@@ -16,6 +16,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // For Google Analytics
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google Services: \(configureError!)")
+        
+        // Optional: configure GAI services
+        var gai = GAI.sharedInstance()
+        gai.trackUncaughtExceptions = true // report uncaught exceptions
+        gai.logger.logLevel = GAILogLevel.Verbose // remove before app release
+        
+        
+        
         return true
     }
 
