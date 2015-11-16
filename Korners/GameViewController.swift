@@ -50,6 +50,13 @@ class GameViewController: UIViewController {
         var builder = GAIDictionaryBuilder.createScreenView()
         tracker.send(builder.build() as [NSObject : AnyObject])
     }
+    
+    // Used for sending messages to Google Analytics
+    func sendAnalyticsGameEvent(actionString: String, labelString: String) {
+        var tracker = GAI.sharedInstance().defaultTracker
+        var builder = GAIDictionaryBuilder.createEventWithCategory("Game", action: actionString, label: labelString, value: 1)
+        tracker.send(builder.build() as [NSObject : AnyObject])
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

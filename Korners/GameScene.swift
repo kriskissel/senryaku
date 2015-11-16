@@ -439,6 +439,9 @@ class GameScene: SKScene {
                             currentPlayer = Players.player2
                             submitMoveToAI(currentGameBoard)
                         }
+                        if let controller = viewController as? GameViewController {
+                            controller.sendAnalyticsGameEvent("Play Again", labelString: "level \(gameLevel!) as player \(humanPlayer)")
+                        }
                     }
                     
                 case "okayMoveButton":
@@ -875,8 +878,18 @@ class GameScene: SKScene {
         if (gameState == GameState.GameOver) {
             let message: String
             let messageColor = UIColor.blackColor()
-            if (currentGameBoard.win == 1) {message = "You Win!"}
-            else {message = "Game Over"}
+            if (currentGameBoard.win == 1) {
+                message = "You Win!"
+                if let controller = viewController as? GameViewController {
+                    controller.sendAnalyticsGameEvent("Win", labelString: "level \(gameLevel!) as player \(humanPlayer)")
+                }
+            }
+            else {
+                message = "Game Over"
+                if let controller = viewController as? GameViewController {
+                    controller.sendAnalyticsGameEvent("Lose", labelString: "level \(gameLevel!) as player \(humanPlayer)")
+                }
+            }
             currentPlayerLabel.text = message   // Change this to ASSET
             currentPlayerLabel.fontColor = messageColor
             self.childNodeWithName("backButton")?.hidden = false
@@ -910,6 +923,9 @@ class GameScene: SKScene {
         if (numberOfUsedLocations == 64) {
             gameState = GameState.GameOver
             alertDraw("No legal moves remaining.")
+            if let controller = viewController as? GameViewController {
+                controller.sendAnalyticsGameEvent("Draw: No moves left", labelString: "level \(gameLevel!) as player \(humanPlayer)")
+            }
         }
         else {
             var numberOfRepititions = 0
@@ -921,6 +937,9 @@ class GameScene: SKScene {
             if (numberOfRepititions >= 3) {
                 gameState = GameState.GameOver
                 alertDraw("Reached same board position three times.")
+                if let controller = viewController as? GameViewController {
+                    controller.sendAnalyticsGameEvent("Draw: 3xRepetition", labelString: "level \(gameLevel!) as player \(humanPlayer)")
+                }
             }
             
 
