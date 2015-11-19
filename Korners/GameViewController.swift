@@ -57,6 +57,16 @@ class GameViewController: UIViewController {
         var builder = GAIDictionaryBuilder.createEventWithCategory("Game", action: actionString, label: labelString, value: 1)
         tracker.send(builder.build() as [NSObject : AnyObject])
     }
+    
+    // Used for sending messages to Google Analytics about timed events
+    func sendAnalyticsTimingEvent(interval: NSNumber, nameString: String, labelString: String) {
+        var tracker = GAI.sharedInstance().defaultTracker
+        var builder = GAIDictionaryBuilder.createTimingWithCategory("Game Timing", interval: interval, name: nameString, label: labelString)
+        
+        print("elapsed time: \(interval)")
+        tracker.send(builder.build() as [NSObject : AnyObject])
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()

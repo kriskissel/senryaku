@@ -47,6 +47,10 @@ class GameScene: SKScene {
         }
         }}
     var aiPlayer: Int { get { return (3 - humanPlayer) }}
+    
+    
+    var startTime = NSDate.timeIntervalSinceReferenceDate()
+    var currentTime = NSDate.timeIntervalSinceReferenceDate()
 
 
     
@@ -852,6 +856,8 @@ class GameScene: SKScene {
         applyCurrentGameBoard()
         self.childNodeWithName("playAgainButton")?.hidden = true
         self.childNodeWithName("backButton")?.hidden = true
+        startTime = NSDate.timeIntervalSinceReferenceDate()
+        currentTime = NSDate.timeIntervalSinceReferenceDate()
     }
     
     func applyCurrentGameBoard() {
@@ -902,12 +908,18 @@ class GameScene: SKScene {
             //print("Player has just won!")
             gameState = GameState.GameOver
             let s = currentGameBoard.winLocation
-            //print("from the currentBoard winLocation:")
-            //print(currentGameBoard.winLocation!)  // what's wrong here?  upwrapping nil?
-            //print("attempting to highlight tiles:")
-            //print([s![0],s![1],s![2],s![3],s![4]])
+            // record game elapsed time to analytics
+            recordElapsedTime()
+            // highlight winning location on board
             highlightTiles([s![0],s![1],s![2],s![3],s![4]])
             //alertGameOver()
+        }
+    }
+    
+    func recordElapsedTime() {
+        currentTime = NSDate.timeIntervalSinceReferenceDate()
+        if let controller = self.viewController! as? GameViewController {
+            controller.sendAnalyticsGameEvent("game timing", labelString: "\(currentTime - startTime)")
         }
     }
     
@@ -926,6 +938,7 @@ class GameScene: SKScene {
             if let controller = viewController as? GameViewController {
                 controller.sendAnalyticsGameEvent("Draw: No moves left", labelString: "level \(gameLevel!) as player \(humanPlayer)")
             }
+            recordElapsedTime()
         }
         else {
             var numberOfRepititions = 0
@@ -940,6 +953,7 @@ class GameScene: SKScene {
                 if let controller = viewController as? GameViewController {
                     controller.sendAnalyticsGameEvent("Draw: 3xRepetition", labelString: "level \(gameLevel!) as player \(humanPlayer)")
                 }
+                recordElapsedTime()
             }
             
 
