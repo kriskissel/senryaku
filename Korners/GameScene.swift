@@ -65,14 +65,14 @@ class GameScene: SKScene {
         }
     
     // the 1 in the following line is temporary, it should be set when the gameLevel is set
-    var aiPly = 1 { didSet { ai = MiniMaxAI(aiMark: 2, tilesCoeff: scoringCoefficient.0,
+    var aiPly: Int = 1 { didSet { ai = MiniMaxAI(aiMark: 2, tilesCoeff: scoringCoefficient.0,
         adjacenciesCoeff: scoringCoefficient.1, protoCornersCoeff: scoringCoefficient.2) } }
     
     var scoringCoefficient: (Int, Int, Int)!
     
     var gameLevel: Int! { didSet {
         print("setting game level to: \(gameLevel!)")
-        if (gameLevel == 0) { scoringCoefficient = (1,1,0); aiPly = 1; }
+        if (gameLevel == 0) { scoringCoefficient = (1,1,100); aiPly = 1 ; }
         else {scoringCoefficient = (1,1,100); aiPly = gameLevel; }
         }
     }
@@ -977,7 +977,14 @@ class GameScene: SKScene {
         // multithreading
         let qualityOfService = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qualityOfService, 0)) {
-            let newBoard = ai.getMove(self.currentGameBoard, ply: self.aiPly) // This was just changed!
+            let newBoard: FastBoard
+            if (self.gameLevel == 0){
+                newBoard = ai.randomResponse(board)
+            }
+            else {
+                newBoard = ai.getMove(self.currentGameBoard, ply: self.aiPly)
+            }
+            
             dispatch_async(dispatch_get_main_queue()) {
                 if (self.gameState == GameState.WaitingForAI) {
                     self.currentGameBoard = newBoard

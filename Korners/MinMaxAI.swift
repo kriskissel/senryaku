@@ -93,6 +93,9 @@ class MiniMaxAI {
     
     func getMove(board: FastBoard, ply: Int) -> FastBoard {
         
+        // The following line uses a random move selector to provide AI moves for the easiest game level.
+        //if (ply == 0) { return randomResponse(board) }
+        
         if let winningBoard = checkForWinningMove(board){
             return winningBoard
         }
@@ -231,6 +234,54 @@ class MiniMaxAI {
             }
         }
         return nil
+    }
+    
+    func randomResponse(board: FastBoard) -> FastBoard {
+        // This method is used to provide a weak opponent for level 1.
+        // It generates all legal (preferred) moves for the current board, thens scores each with
+        // the ratePosition method.  Then it sorts the moves in decreasing order of position rating.
+        // It randomly selects one of the two (I'LL NEED TO PLAY WITH THIS NUMBER) of moves
+        // as its response.
+        
+        
+        if (board.usedLocations[1]!.count + board.usedLocations[2]!.count < 3) {
+            return randomizeOpening(board)!
+        }
+        
+        
+        
+        // let's throw in an extra 75% chance of using a blocking move
+        let blockMove: FastBoard?
+        if (board.protoCorners[humanMark] > 0) {
+            blockMove = blockingMove(board)
+            let p = Int(arc4random_uniform(UInt32(Int(4))))
+            if (p < 3) {
+                return blockMove!
+            }
+        }
+        
+        
+        let childBoards = board.preferredChildBoards(aiMark)
+        
+        
+        
+        var scoredChildBoards = [(Float, FastBoard)]()
+        for child in childBoards {
+            scoredChildBoards.append((ratePosition(child), child))
+        }
+        scoredChildBoards.sortInPlace { $0.0 > $1.0 }
+        
+        //let l = ceil( Float(scoredChildBoards.count) / 4.0 )
+        let l: Int
+        if (scoredChildBoards.count > 1) {
+            l = 2
+        }
+        else {
+            l = 1
+        }
+        let k = Int(arc4random_uniform(UInt32(Int(l))))
+        
+        return scoredChildBoards[k].1
     }
 
     
