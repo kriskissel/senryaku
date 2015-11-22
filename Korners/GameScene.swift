@@ -976,7 +976,13 @@ class GameScene: SKScene {
         if (gameState == GameState.GameOver) {return}
         // multithreading
         let qualityOfService = Int(QOS_CLASS_USER_INITIATED.rawValue)
-        dispatch_async(dispatch_get_global_queue(qualityOfService, 0)) {
+        // delay AI move
+        let delay: Int64
+        if (gameLevel > 2) { delay = 0;}
+        else { delay = ColorConstants.AIDelayInNanoSeconds;}
+        let delayInNanoSeconds = dispatch_time(DISPATCH_TIME_NOW, delay)
+        dispatch_after(delayInNanoSeconds, dispatch_get_global_queue(qualityOfService, 0)) {
+        //dispatch_async(dispatch_get_global_queue(qualityOfService, 0)) {
             let newBoard: FastBoard
             if (self.gameLevel == 0){
                 newBoard = ai.randomResponse(board)
@@ -1068,6 +1074,7 @@ struct ColorConstants {
     //static let BackgroundColor = UIColor(red: 255, green: 215, blue: 0, alpha: 1) // Gold Background
     //static let BackgroundColor = UIColor(red: 100, green: 59, blue: 15, alpha: 1) // Sepia? Background
     static let BackgroundColor = UIColor(red: 112, green: 66, blue: 20, alpha: 1) // Another Sepia? Background
+    static let AIDelayInNanoSeconds = Int64(2.0 * Double(NSEC_PER_SEC))
 
 }
 
