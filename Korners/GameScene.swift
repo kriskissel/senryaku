@@ -174,6 +174,7 @@ class GameScene: SKScene {
         }
     }
     
+    // This is stupid, isn't it?
     func recenterBoard() {
         recenterBoardInner()
     }
@@ -265,14 +266,31 @@ class GameScene: SKScene {
             title.position = titlePosition
         }
         
+        // multiplier to make status label a little smaller on ipad portrait and a little bigger
+        // on iphone landscape
+        
+        /*
+
+        IMPORTANT: I'm just giessing at the cutoff values here.  Look them up!
+
+        */
+        
+        var statusLabelSizeMultiplier: Double = 1
+        if (viewHeight >= CGFloat(800)){
+            statusLabelSizeMultiplier = 0.75
+        }
+        if (viewHeight <= CGFloat(400)){
+            statusLabelSizeMultiplier = 1.2
+        }
+        
         // status label
         if (statusY == nil){
-            statusY = viewHeight - squareSize / 2 - 0.6 * titleHeight - maxHeight
+            statusY = viewHeight - squareSize / 2 - 0.6 * titleHeight * CGFloat(statusLabelSizeMultiplier) - maxHeight
         }
         let statusPosition = CGPointMake(availableWidth / 2, statusY!)
         if let status = self.childNodeWithName("statusLabel") as! SKLabelNode? {
             status.position = statusPosition
-            status.fontSize = 0.75 * titleHeight
+            status.fontSize = 0.75 * titleHeight * CGFloat(statusLabelSizeMultiplier)
         }
         
         // okay and cancel buttons, playAgain and backButton
