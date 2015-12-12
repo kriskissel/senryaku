@@ -1092,7 +1092,7 @@ struct ColorConstants {
     //static let BackgroundColor = UIColor(red: 255, green: 215, blue: 0, alpha: 1) // Gold Background
     //static let BackgroundColor = UIColor(red: 100, green: 59, blue: 15, alpha: 1) // Sepia? Background
     static let BackgroundColor = UIColor(red: 112, green: 66, blue: 20, alpha: 1) // Another Sepia? Background
-    static let AIDelayInNanoSeconds = Int64(2.0 * Double(NSEC_PER_SEC))
+    static let AIDelayInNanoSeconds = Int64(1.5 * Double(NSEC_PER_SEC))
 
 }
 

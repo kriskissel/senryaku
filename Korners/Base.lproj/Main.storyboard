@@ -56,8 +56,8 @@
                                     <segment title="Level 4"/>
                                 </segments>
                             </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zec-Kf-jG3">
-                                <rect key="frame" x="198" y="322" width="203" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zec-Kf-jG3">
+                                <rect key="frame" x="210" y="322" width="179" height="29"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <segments>
@@ -65,6 +65,14 @@
                                     <segment title="Play Second"/>
                                 </segments>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qdG-HE-tw5">
+                                <rect key="frame" x="255.5" y="358" width="89" height="30"/>
+                                <animations/>
+                                <state key="normal" title="View Tutorial"/>
+                                <connections>
+                                    <action selector="GoToTutorialButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZAQ-Af-PHB"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -73,6 +81,7 @@
                             <constraint firstItem="zec-Kf-jG3" firstAttribute="top" secondItem="Dad-tY-VX1" secondAttribute="bottom" constant="8" id="256-QY-2fo"/>
                             <constraint firstAttribute="leadingMargin" secondItem="6OG-gP-b4z" secondAttribute="leading" id="4D2-1A-Kni"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="u8I-4O-mRk" secondAttribute="bottom" constant="20" id="4Hl-NN-aaB"/>
+                            <constraint firstItem="qdG-HE-tw5" firstAttribute="centerX" secondItem="6OG-gP-b4z" secondAttribute="centerX" id="4Ps-Ls-5X7"/>
                             <constraint firstItem="WEE-fE-m1f" firstAttribute="top" secondItem="6OG-gP-b4z" secondAttribute="bottom" constant="8" id="6Cx-wM-N0l"/>
                             <constraint firstAttribute="trailingMargin" secondItem="u8I-4O-mRk" secondAttribute="trailing" id="97g-Ki-6Zc"/>
                             <constraint firstItem="u8I-4O-mRk" firstAttribute="bottom" secondItem="WEE-fE-m1f" secondAttribute="bottom" id="AfR-ZE-ak1"/>
@@ -81,6 +90,7 @@
                             <constraint firstAttribute="leadingMargin" secondItem="HA6-rT-jiz" secondAttribute="leading" id="IPp-tp-k8e"/>
                             <constraint firstAttribute="trailingMargin" secondItem="6OG-gP-b4z" secondAttribute="trailing" id="JBA-s8-BrO"/>
                             <constraint firstItem="zec-Kf-jG3" firstAttribute="centerX" secondItem="Dad-tY-VX1" secondAttribute="centerX" id="JbW-Qe-oaS"/>
+                            <constraint firstItem="qdG-HE-tw5" firstAttribute="top" secondItem="zec-Kf-jG3" secondAttribute="bottom" constant="8" symbolic="YES" id="L7t-xp-jr4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="u8I-4O-mRk" secondAttribute="trailing" id="LnI-yv-goP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="HA6-rT-jiz" secondAttribute="trailing" id="Ls0-6n-1Te"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="6OG-gP-b4z" secondAttribute="bottom" constant="64" id="XIY-st-sYr"/>
@@ -115,7 +125,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="376" y="307"/>
+            <point key="canvasLocation" x="396" y="283"/>
         </scene>
         <!--Game View Controller-->
         <scene sceneID="qzC-64-Iku">
@@ -158,6 +168,6 @@
     </scenes>
     <resources>
         <image name="BackgroundImage" width="1155" height="578"/>
-        <image name="TitleText" width="1567" height="272"/>
+        <image name="TitleText" width="3134" height="545"/>
     </resources>
 </document>

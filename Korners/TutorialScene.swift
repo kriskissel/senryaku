@@ -197,7 +197,7 @@ class TutorialScene: GameScene {
         currentGameBoard = FastBoard()
         currentViewedBoard = currentGameBoard
         applyCurrentGameBoard()
-        let victoryLocations = [(0,3),(1,3),(2,3),(2,2),(2,1),(1,7),(1,6),(1,5),(2,5),(3,5),
+        let victoryLocations = [(0,4),(0,3),(0,2),(1,2),(2,2),(1,6),(2,6),(3,6),(3,5),(3,4),
                                 (4,1),(5,1),(6,1),(6,2),(6,3),(5,5),(5,6),(5,7),(6,7),(7,7)]
         for location in victoryLocations{
             self.addPieceToBoardAnimated("\(location.1)\(location.0)", player: .player1)

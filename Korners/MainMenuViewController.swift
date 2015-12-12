@@ -14,6 +14,12 @@ class MainMenuViewController: UIViewController {
     @IBOutlet weak var levelSelectorSegmentedControl: UISegmentedControl!
     @IBOutlet weak var playerSelectorSegmentedControl: UISegmentedControl!
     
+
+    @IBAction func GoToTutorialButton(sender: UIButton) {
+        print("Pressed View Tutorial")
+        performSegueWithIdentifier("showTutorial", sender: self)
+    }
+    
     
     @IBAction func playNow(sender: UIButton) {
         print("Pressed Play Now")
