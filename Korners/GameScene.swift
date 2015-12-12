@@ -104,6 +104,8 @@ class GameScene: SKScene {
         displayGameState()
         } }
     
+    var draw = false
+    
     var boardSquares = [SKNode]()
     
     var userJumpSequence = [(Int,Int)]()
@@ -453,6 +455,8 @@ class GameScene: SKScene {
                 case "playAgainButton":
                     if (gameState == GameState.GameOver) {
                         resetGame()
+                        checkUserDefaultsDictionaryWithWinsLossesTies()
+                        askToRate()
                         if (humanPlayer == 1) {
                             gameState = GameState.ReadyForPlayerMove
                         }
@@ -876,6 +880,7 @@ class GameScene: SKScene {
         self.childNodeWithName("backButton")?.hidden = true
         startTime = NSDate.timeIntervalSinceReferenceDate()
         currentTime = NSDate.timeIntervalSinceReferenceDate()
+        draw = false
     }
     
     func applyCurrentGameBoard() {
@@ -902,18 +907,23 @@ class GameScene: SKScene {
         if (gameState == GameState.GameOver) {
             let message: String
             let messageColor = UIColor.blackColor()
+            let outcome: String
             if (currentGameBoard.win == 1) {
                 message = "You Win!"
+                outcome = "win"
                 if let controller = viewController as? GameViewController {
                     controller.sendAnalyticsGameEvent("Win", labelString: "level \(gameLevel!) as player \(humanPlayer)")
                 }
             }
             else {
                 message = "Game Over"
+                if draw { outcome = "tie" ;}
+                else { outcome = "loss";}
                 if let controller = viewController as? GameViewController {
                     controller.sendAnalyticsGameEvent("Lose", labelString: "level \(gameLevel!) as player \(humanPlayer)")
                 }
             }
+            updateUserDefaultsDictionaryWithWinsLossesTies(outcome)
             currentPlayerLabel.text = message   // Change this to ASSET
             currentPlayerLabel.fontColor = messageColor
             self.childNodeWithName("backButton")?.hidden = false
@@ -957,6 +967,7 @@ class GameScene: SKScene {
                 controller.sendAnalyticsGameEvent("Draw: No moves left", labelString: "level \(gameLevel!) as player \(humanPlayer)")
             }
             recordElapsedTime()
+            draw = true
         }
         else {
             var numberOfRepititions = 0
@@ -972,6 +983,7 @@ class GameScene: SKScene {
                     controller.sendAnalyticsGameEvent("Draw: 3xRepetition", labelString: "level \(gameLevel!) as player \(humanPlayer)")
                 }
                 recordElapsedTime()
+                draw = true
             }
             
 
@@ -986,6 +998,49 @@ class GameScene: SKScene {
     func alertDraw(message: String) {
         let alert = UIAlertView(title: "GAME OVER", message: "Draw: \(message)", delegate: nil, cancelButtonTitle: "Okay")
         alert.show()
+    }
+    
+    func askToRate() {
+        print("deciding whether to ask to rate app")
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let wins = defaults.integerForKey("wins")
+        let losses = defaults.integerForKey("losses")
+        let ties = defaults.integerForKey("ties")
+        let total = wins + losses + ties
+        let lastAsked = defaults.integerForKey("lastAskedToRate")
+        print("last asked: \(lastAsked)")
+        var askNow = false
+        if (wins > 0 && total > 10 + lastAsked) {
+            askNow = true
+        }
+        if (wins > 5 && losses > 5 && total > 10 + lastAsked) {
+            askNow = true
+        }
+        if (defaults.boolForKey("ratedApp")) {
+            askNow = false
+        }
+        
+        print("value of askNow is \(askNow)")
+        
+        if askNow {
+            var agreeToRate = false
+            
+            var rateAlert = UIAlertController(title: "Rate Senryaku", message: "Would you like to rate this app?", preferredStyle: UIAlertControllerStyle.Alert)
+            
+            rateAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (action: UIAlertAction!) in agreeToRate = true; } ))
+            
+            rateAlert.addAction(UIAlertAction(title: "No Thanks", style:  .Cancel, handler: { (action: UIAlertAction!) in agreeToRate = false; } ))
+            
+            self.viewController!.presentViewController(rateAlert, animated: true, completion: nil)
+            
+            if agreeToRate {
+                defaults.setBool(true, forKey: "ratedApp")
+                UIApplication.sharedApplication().openURL(NSURL(string: "http://www.google.com")!)
+            }
+            else {
+                defaults.setInteger(total, forKey: "lastAskedToRate")
+            }
+        }
     }
 
     
@@ -1044,6 +1099,35 @@ class GameScene: SKScene {
                 }
             }
         }
+    
+    func updateUserDefaultsDictionaryWithWinsLossesTies(outcome: String){
+        let defaults = NSUserDefaults.standardUserDefaults()
+        switch outcome {
+        case "win":
+            let previousWins = defaults.integerForKey("wins")
+            defaults.setInteger(previousWins + 1, forKey: "wins")
+            
+        case "loss":
+            let previousLosses = defaults.integerForKey("losses")
+            defaults.setInteger(previousLosses + 1, forKey: "losses")
+            
+        case "tie":
+            let previousTies = defaults.integerForKey("ties")
+            defaults.setInteger(previousTies, forKey: "ties")
+            
+        default:
+            break
+        }
+    }
+    
+    func checkUserDefaultsDictionaryWithWinsLossesTies(){
+        let outcomes = ["wins", "losses", "ties"]
+        let defaults = NSUserDefaults.standardUserDefaults()
+        for outcome in outcomes {
+            let value = defaults.integerForKey(outcome)
+            print(outcome + ": \(value)")
+        }
+    }
     
 
 }  // This is the end of the GameScene Class definition.  ???????
