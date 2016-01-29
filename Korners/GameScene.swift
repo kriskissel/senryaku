@@ -1001,6 +1001,7 @@ class GameScene: SKScene {
     }
     
     func askToRate() {
+        /*
         print("deciding whether to ask to rate app")
         let defaults = NSUserDefaults.standardUserDefaults()
         let wins = defaults.integerForKey("wins")
@@ -1041,6 +1042,7 @@ class GameScene: SKScene {
                 defaults.setInteger(total, forKey: "lastAskedToRate")
             }
         }
+        */
     }
 
     
